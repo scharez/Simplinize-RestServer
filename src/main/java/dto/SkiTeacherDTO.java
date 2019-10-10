@@ -15,6 +15,7 @@ public class SkiTeacherDTO {
 
     private List<Role> roles;
 
+    public SkiTeacherDTO(){}
 
     public SkiTeacherDTO(String username, String password) {
         this.username = username;

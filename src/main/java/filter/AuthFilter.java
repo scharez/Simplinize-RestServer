@@ -70,7 +70,7 @@ public class AuthFilter implements ContainerRequestFilter {
 
     private Response validateRequest(String content) {
 
-        String msg = "LOL"; //jb.generateResponse("Error", "Unauthorized", content);
+        String msg = jb.generateResponse("Error", "Unauthorized", content);
         CacheControl cc = new CacheControl();
         cc.setNoStore(true);
         return Response.status(Response.Status.UNAUTHORIZED)

@@ -1,8 +1,8 @@
 package repository;
 
-import entity.Role;
-import entity.SkiTeacher;
+import entity.*;
 import org.bouncycastle.util.encoders.Hex;
+import org.json.JSONArray;
 import utils.JsonBuilder;
 import utils.JwtHelper;
 import utils.Mail;
@@ -38,7 +38,7 @@ public class Repository {
     }
 
     /**
-     * get the JWT-Token into Repository from the Filter
+     * get the JWT-Token into Repository from Authfilter
      *
      * @param token
      */
@@ -84,6 +84,10 @@ public class Repository {
 
         SkiTeacher user = new SkiTeacher(firstName, lastName, email, roles);
 
+        user.setUsername(firstName.toLowerCase().charAt(0) + "." + lastName.toLowerCase());
+
+        Token token = new Token(user);
+
         TypedQuery<Long> queryUniqueMail = em.createNamedQuery("SkiTeacher.countEmail", Long.class);
         queryUniqueMail.setParameter("email", user.getEmail());
 
@@ -91,17 +95,79 @@ public class Repository {
             return jb.generateResponse("error", "addSkiTeacher", "Email already exists");
         }
 
-        executor.execute(() -> mailer.sendRegisterEmail());
+        executor.execute(() -> mailer.sendSetPasswordMail(token, user));
 
         em.getTransaction().begin();
         em.persist(user);
+        em.persist(token);
         em.getTransaction().commit();
 
-        return jb.generateResponse("success", "addSkiTeacher", "SkiTeacher successfully added");
+        return jb.generateResponse("success", "addSkiTeacher", "SkiTeacher added");
     }
 
     public String setPassword4SkiTeacher(String token, String password) {
 
+        TypedQuery<Token> queryToken = em.createQuery("SELECT t FROM Token t WHERE t.token = :token", Token.class);
+        queryToken.setParameter("token", token);
+
+        List<Token> tokenList = queryToken.getResultList();
+
+        if(tokenList.size() == 0) {
+            //Error
+            System.out.println("Error");
+            return "Error";
+        }
+
+        SkiTeacher user = tokenList.get(0).getSkiTeacher();
+
+        user.setPassword(password);
+
+        em.getTransaction().begin();
+        em.remove(token);
+        em.getTransaction().commit();
+
+        return "Password successfully set";
+    }
+
+    public String assignCourse(Course course) {
+
+
+
         return "";
     }
+
+    public String addTeacherToGroup(long groupId, SkiTeacher skiTeacher) {
+
+
+
+        return "";
+    }
+
+    public String getAllGroups() {
+
+        TypedQuery<CourseGroup> query = em.createNamedQuery("CourseGroup.getAllGroups", CourseGroup.class);
+
+        List<CourseGroup> groupList = query.getResultList();
+
+        if(groupList.size() == 0) {
+            return jb.generateResponse("error", "getAllGroups","There are no Groups");
+        }
+
+        JSONArray lol = new JSONArray(groupList);
+
+        return jb.generateDataResponse("success","getAllGroups",lol);
+    }
+
+    public String getAllMembers() {
+
+        TypedQuery<Student> query = em.createNamedQuery("Student.getAllMembers", Student.class);
+
+        List<Student> studentList = query.getResultList();
+
+        if(studentList.size() == 0) {
+            return jb.generateResponse("error", "getAllMembers", "There are no members");
+        }
+        return "";
+    }
+
 }

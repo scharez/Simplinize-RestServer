@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 
 public class Main {
 
-    private static final String BASE_URI = "http://0.0.0.0:8080/rest";
+    private static final String BASE_URI = "http://0.0.0.0:8080/simplinize";
 
     private static org.glassfish.grizzly.http.server.HttpServer startServer() {
 

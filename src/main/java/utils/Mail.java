@@ -1,8 +1,13 @@
 package utils;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
+import entity.SkiTeacher;
+import entity.Token;
+
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 public class Mail {
@@ -33,17 +38,35 @@ public class Mail {
      * Send an email to the teacher who was created by the admin to assign a password
      *
      * @param token
+     * @param user
      */
-    public void sendRegisterEmail() {
+    public void sendSetPasswordMail(Token token, SkiTeacher user) {
 
-    }
+        Message message = new MimeMessage(session);
 
-    /**
-     * Send an email to the admin when the teacher has finished the registration process
-     *
-     * @param token
-     */
-    public void sendRegisterConfirmation() {
+        try {
+            message.setFrom(new InternetAddress(pl.prop.getProperty("mail.user")));
+            message.setRecipients(
+                    Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
+            message.setSubject("Set your simplinize password");
+
+            String mailBody = "Hello " + user.getFirstName() + " " + user.getLastName() + "<br>" + "Please set a password for your account! <br> Your token --> " +  token.getToken();
+
+            //button url e.g https://simplinize.scharez.at/auth/setPassword/30945020293840949094
+
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(mailBody, "text/html; charset=utf-8");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+
+            message.setContent(multipart);
+
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
 
     }
 }

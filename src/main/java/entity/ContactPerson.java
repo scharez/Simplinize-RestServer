@@ -7,7 +7,9 @@ import javax.persistence.*;
         @NamedQuery(name="ContactPerson.lol",
                 query=""),
 })
-public class ContactPerson extends Person{
+public class ContactPerson extends Person {
+
+    private String password;
 
     private String email;
     private String phone;
