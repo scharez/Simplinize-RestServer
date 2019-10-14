@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,13 +53,13 @@ public class Repository {
         return jb.generateResponse("error", "jwt", "Wrong Token!");
     }
 
-    public String login(String username, String password) {
+    public String loginTeacher(String username, String password) {
 
         TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
         query.setParameter("username", username);
 
         if (query.getResultList().size() == 0) {
-            return jb.generateResponse("error", "login", "User does not exist");
+            return jb.generateResponse("error", "loginTeacher", "User does not exist");
         }
 
         SkiTeacher user = query.getResultList().get(0);
@@ -69,7 +71,7 @@ public class Repository {
             byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
 
             if (!new String(Hex.encode(hash)).equals(user.getPassword())) {
-                return jb.generateResponse("error", "login", "Wrong Password");
+                return jb.generateResponse("error", "loginTeacher", "Wrong Password");
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -77,7 +79,7 @@ public class Repository {
 
         String jwtToken = jwt.create(user.getUsername(), user.getRoles().toArray());
 
-        return jb.generateResponse("success", "login", jwtToken);
+        return jb.generateResponse("success", "loginTeacher", jwtToken);
     }
 
     public String addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -127,6 +129,93 @@ public class Repository {
         em.getTransaction().commit();
 
         return "Password successfully set";
+    }
+
+    public String loginContactPerson(String email, String password) {
+
+        TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getPerson", ContactPerson.class);
+        query.setParameter("email", email);
+
+        List<ContactPerson> result = query.getResultList();
+
+        if (result.size() == 0) {
+            return jb.generateResponse("error", "loginContactPerson", "Person does not exist"); // Error
+        }
+
+        ContactPerson person = result.get(0);
+
+        if(!person.isVerified()) {
+            return jb.generateResponse("error", "loginContactPerson", "Please confirm your email first");
+        }
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(Hex.decode(person.getSalt()));
+
+            byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
+
+            if (!new String(Hex.encode(hash)).equals(person.getPassword())) {
+                return jb.generateResponse("error", "loginContactPerson", "Wrong Password");
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        person.setRole(Role.CONTACTPERSON);
+
+        String jwtToken = jwt.create(person.getEmail(), new Role[]{person.getRole()});
+
+        return jb.generateResponse("success", "loginContactPerson", jwtToken);
+    }
+
+    public String registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
+
+        ContactPerson person = new ContactPerson(firstName, lastName, email, password, phoneNumber);
+
+        person.setRole(Role.CONTACTPERSON);
+
+        Token token = new Token(person);
+
+        TypedQuery<Long> queryUniqueEmail = em.createNamedQuery("ContactPerson.uniqueName", Long.class);
+        queryUniqueEmail.setParameter("email", email);
+
+        long numberOfEntriesEmail = queryUniqueEmail.getSingleResult();
+
+        if (numberOfEntriesEmail != 0) {
+            return jb.generateResponse("error", "registerContactPerson", "Email already exists");
+        }
+
+        person.setToken(token);
+
+        executor.execute(() -> mailer.sendConfirmation(token, person));
+
+        em.getTransaction().begin();
+        em.persist(person);
+        em.getTransaction().commit();
+
+        return jb.generateResponse("success", "registerContactPerson", "Please confirm your email now");
+    }
+
+    public String confirmMailContactPerson(String token) {
+
+        TypedQuery<Token> queryToken = em.createNamedQuery("Token.getToken", Token.class);
+        queryToken.setParameter("token", token);
+
+        List<Token> tokenList = queryToken.getResultList();
+
+        if (tokenList.size() == 0) {
+            return "<h1> Error </h1>";
+        }
+
+        Token verifyToken = tokenList.get(0);
+
+        verifyToken.getContactPerson().setVerified(true);
+
+        em.getTransaction().begin();
+        em.remove(verifyToken);
+        em.getTransaction().commit();
+
+        return "<h1> Verificated! </h1>";
     }
 
     public String assignCourse(Course course) {

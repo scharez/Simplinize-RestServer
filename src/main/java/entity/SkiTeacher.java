@@ -36,6 +36,9 @@ public class SkiTeacher {
 
     private String salt;
 
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Token token;
+
     public SkiTeacher() {}
 
     public SkiTeacher(String username, String password, String firstName, String lastName, String birthday, String email, long number, List<Role> roles) {
@@ -135,6 +138,14 @@ public class SkiTeacher {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
     }
 
     private void hashPassword(String password) {

@@ -4,6 +4,10 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name="Token.getToken",
+                query="select t from Token t WHERE t.token = :token")
+})
 public class Token {
 
     @Id
@@ -12,13 +16,22 @@ public class Token {
 
     private String token;
 
-    @OneToOne
+    @OneToOne(mappedBy = "token", cascade = CascadeType.PERSIST)
     private SkiTeacher skiTeacher;
+
+    @OneToOne(mappedBy = "token", cascade = CascadeType.PERSIST)
+    private ContactPerson contactPerson;
 
     public Token(){}
 
+
     public Token(SkiTeacher skiTeacher) {
         this.skiTeacher = skiTeacher;
+        this.token = UUID.randomUUID().toString();
+    }
+
+    public Token(ContactPerson contactPerson) {
+        this.contactPerson = contactPerson;
         this.token = UUID.randomUUID().toString();
     }
 
@@ -44,5 +57,13 @@ public class Token {
 
     public void setSkiTeacher(SkiTeacher skiTeacher) {
         this.skiTeacher = skiTeacher;
+    }
+
+    public ContactPerson getContactPerson() {
+        return contactPerson;
+    }
+
+    public void setContactPerson(ContactPerson contactPerson) {
+        this.contactPerson = contactPerson;
     }
 }

@@ -1,5 +1,6 @@
 package utils;
 
+import entity.ContactPerson;
 import entity.SkiTeacher;
 import entity.Token;
 
@@ -68,5 +69,33 @@ public class Mail {
             e.printStackTrace();
         }
 
+    }
+
+    public void sendConfirmation(Token token, ContactPerson person) {
+
+        Message message = new MimeMessage(session);
+
+        try {
+            message.setFrom(new InternetAddress(pl.prop.getProperty("mail.user")));
+            message.setRecipients(
+                    Message.RecipientType.TO, InternetAddress.parse(person.getEmail()));
+            message.setSubject("Pleas confirm your Email");
+
+            String mailBody = "Hello " + person.getFirstName() + " " + person.getLastName() + "<br>" + "Please confirm your Email!" +
+                    "<br> Token --> " + token.getToken();
+
+            MimeBodyPart mimeBodyPart = new MimeBodyPart();
+            mimeBodyPart.setContent(mailBody, "text/html; charset=utf-8");
+
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(mimeBodyPart);
+
+            message.setContent(multipart);
+
+            Transport.send(message);
+
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
     }
 }

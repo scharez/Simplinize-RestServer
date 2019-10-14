@@ -1,5 +1,7 @@
 package service;
 
+import dto.ContactPersonDTO;
+import dto.LoginDTO;
 import dto.SkiTeacherDTO;
 import repository.Repository;
 
@@ -10,19 +12,19 @@ import javax.ws.rs.core.MediaType;
 public class AuthService {
 
     /**
-     * Login a Ski-Teacher
+     * Login a SkiTeacher
      *
-     * @param st the Transfer Object the Ski-Teacher Entity
+     * @param login the Transfer Object of Login
      * @return a json which can contain an error or a successfully login message
      */
 
-    @Path("login")
+    @Path("loginTeacher")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String login(SkiTeacherDTO st) {
+    public String loginTeacher(LoginDTO login) {
 
-        return Repository.getInstance().login(st.getUsername(), st.getPassword());
+        return Repository.getInstance().loginTeacher(login.getCredentials(), login.getPassword());
     }
 
     /**
@@ -58,16 +60,50 @@ public class AuthService {
     }
 
     /**
-     * add a Ski-Teacher
+     * Login a ContactPerson
      *
-     * @param st transfer object of SkiTeacher entity
-     * @return a json which can contain an error or a successfully register message
+     * @param login the Transfer Object of Login
+     * @return a json which can contain an error or a successfully login message
      */
 
-    @Path("changeDetails")
-    public String changeDetails() {
+    @Path("loginContactPerson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public String loginContactPerson(LoginDTO login) {
 
-        return "";
+        return Repository.getInstance().loginContactPerson(login.getCredentials(), login.getPassword());
+    }
+
+    /**
+     * Register a ContactPerson
+     *
+     * @param register the Transfer Object of ContactPersonDTO
+     * @return a json which can contain an error or a successfully login message
+     */
+
+    @Path("registerContactPerson")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public String registerContactPerson(ContactPersonDTO register) {
+
+        return Repository.getInstance().registerContactPerson(register.getFirstName(), register.getLastName(), register.getEmail(), register.getPassword(), register.getPhoneNumber());
+    }
+
+    /**
+     * Verify a ContactPerson
+     *
+     * @param token the Transfer Object of ContactPersonDTO
+     * @return a json which can contain an error or a successfully login message
+     */
+
+    @Path("verifyContactPerson")
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String confirmMail(@QueryParam("token") String token) {
+
+        return Repository.getInstance().confirmMailContactPerson(token);
     }
 
 
