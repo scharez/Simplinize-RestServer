@@ -11,7 +11,6 @@ import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -84,7 +83,10 @@ public class Repository {
 
     public String addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
 
+        roles.add(Role.SKITEAM);
+
         SkiTeacher user = new SkiTeacher(firstName, lastName, email, roles);
+
 
         user.setUsername(firstName.toLowerCase().charAt(0) + "." + lastName.toLowerCase());
 
@@ -121,11 +123,12 @@ public class Repository {
         }
 
         SkiTeacher user = tokenList.get(0).getSkiTeacher();
+        Token dbToken = user.getToken();
 
         user.setPassword(password);
 
         em.getTransaction().begin();
-        em.remove(token);
+        //em.remove(dbToken);
         em.getTransaction().commit();
 
         return "Password successfully set";
@@ -218,11 +221,12 @@ public class Repository {
         return "<h1> Verificated! </h1>";
     }
 
-    public String assignCourse(Course course) {
+    public String assignCourse(Date from, Date to, String place, SkiTeacher instructor) {
+
+        Course course = new Course(from, to, place, instructor);
 
 
-
-        return "";
+        return "LOL";
     }
 
     public String addTeacherToGroup(long groupId, SkiTeacher skiTeacher) {

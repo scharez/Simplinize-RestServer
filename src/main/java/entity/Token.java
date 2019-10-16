@@ -1,6 +1,7 @@
 package entity;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -23,7 +24,6 @@ public class Token {
     private ContactPerson contactPerson;
 
     public Token(){}
-
 
     public Token(SkiTeacher skiTeacher) {
         this.skiTeacher = skiTeacher;

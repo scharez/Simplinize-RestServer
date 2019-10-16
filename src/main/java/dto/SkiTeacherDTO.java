@@ -29,6 +29,10 @@ public class SkiTeacherDTO {
         this.roles = roles;
     }
 
+    public SkiTeacherDTO(String username) {
+        this.username = username;
+    }
+
     public String getUsername() {
         return username;
     }

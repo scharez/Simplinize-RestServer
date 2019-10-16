@@ -1,7 +1,9 @@
 package entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @NamedQueries({
@@ -17,13 +19,16 @@ public class Student {
     private String firstName;
     private String lastName;
 
+    @Temporal(TemporalType.DATE)
     private Date birthday;
+
     private int postCode;
     private String place;
     private String houseNumber;
     private String street;
 
-    public Student() {}
+    public Student() {
+    }
 
     public Student(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
         this.firstName = firstName;
@@ -35,5 +40,67 @@ public class Student {
         this.street = street;
     }
 
+    public long getId() {
+        return id;
+    }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public int getPostCode() {
+        return postCode;
+    }
+
+    public void setPostCode(int postCode) {
+        this.postCode = postCode;
+    }
+
+    public String getPlace() {
+        return place;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public String getHouseNumber() {
+        return houseNumber;
+    }
+
+    public void setHouseNumber(String houseNumber) {
+        this.houseNumber = houseNumber;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
 }

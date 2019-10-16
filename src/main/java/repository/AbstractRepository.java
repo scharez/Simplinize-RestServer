@@ -3,7 +3,7 @@ package repository;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
-public class AbstractRepository<T> {
+public abstract class AbstractRepository<T> {
 
     private Class<T> entityClass;
 
@@ -11,5 +11,10 @@ public class AbstractRepository<T> {
         this.entityClass = entityClass;
     }
 
-    EntityManager em = Persistence.createEntityManagerFactory("SimplinizePU").createEntityManager();
+    //EntityManager em = Persistence.createEntityManagerFactory("SimplinizePU").createEntityManager();
+
+
+
+
+
 }

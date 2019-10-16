@@ -5,6 +5,8 @@ public class LoginDTO {
     private String credentials;
     private String password;
 
+    public LoginDTO() {}
+
     public LoginDTO(String credentials, String password) {
         this.credentials = credentials;
         this.password = password;

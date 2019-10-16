@@ -44,7 +44,7 @@ public class AuthFilter implements ContainerRequestFilter {
                 token = authorizationHeader.substring("Bearer".length()).trim();
                 jwt.checkSubject(token);
 
-                if(isUserInRole(jwt.getRoles(token), secure.value())) {
+                if (isUserInRole(jwt.getRoles(token), secure.value())) {
                     Repository.getInstance().saveHeader(token);
                 } else {
                     Response res = validateRequest("You are not allowed");
@@ -55,7 +55,6 @@ public class AuthFilter implements ContainerRequestFilter {
                 rc.abortWith(res);
             }
         }
-
     }
 
     private boolean isUserInRole(Role[] userRoles, Role[] roles) {

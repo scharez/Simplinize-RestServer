@@ -7,12 +7,15 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NamedQueries({
         @NamedQuery(name="ContactPerson.getPerson",
                 query="select p from ContactPerson p WHERE p.email = :email"),
-        @NamedQuery(name="ContactPerson.uniqueName", query = "select count(p) from ContactPerson p where p.email = :email")
+        @NamedQuery(name="ContactPerson.uniqueName",
+                query = "select count(p) from ContactPerson p where p.email = :email")
 })
 public class ContactPerson {
 
@@ -37,7 +40,11 @@ public class ContactPerson {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Token token;
 
+    @ManyToMany
+    private List<Student> students;
+
     public ContactPerson() {
+        this.students = new ArrayList<>();
     }
 
     public ContactPerson(String firstName, String lastName, String email, String password, String phone) {
@@ -126,6 +133,14 @@ public class ContactPerson {
 
     public void setToken(Token token) {
         this.token = token;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     private void hashPassword(String password) {

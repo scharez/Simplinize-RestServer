@@ -5,20 +5,31 @@ import java.util.Date;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name="Course.lol",
-                query=""),
+
 })
 public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
 
+    @Temporal(TemporalType.DATE)
     private Date from;
+
+    @Temporal(TemporalType.DATE)
     private Date to;
     private String place;
 
     @ManyToOne
     private SkiTeacher instructor;
+
+    public Course () {}
+
+    public Course(Date from, Date to, String place, SkiTeacher instructor) {
+        this.from = from;
+        this.to = to;
+        this.place = place;
+        this.instructor = instructor;
+    }
 
     public long getId() {
         return id;

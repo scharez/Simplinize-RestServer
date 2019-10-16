@@ -50,11 +50,11 @@ public class AuthService {
      * @return a json which can contain an error or a successfully register message
      */
 
-    @Path("setPassword/{token}")
+    @Path("setPassword")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String setPassword(@PathParam("token") String token, SkiTeacherDTO st){
+    public String setPassword(@QueryParam("token") String token, SkiTeacherDTO st){
 
         return Repository.getInstance().setPassword4SkiTeacher(token, st.getPassword());
     }

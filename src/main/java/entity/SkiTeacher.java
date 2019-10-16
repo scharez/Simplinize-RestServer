@@ -16,6 +16,8 @@ import java.util.List;
         @NamedQuery(name="SkiTeacher.getUser",
                 query="SELECT s FROM SkiTeacher s WHERE s.username = :username"),
 })
+
+// Implement CountUser in order to get if username is unique
 public class SkiTeacher {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
