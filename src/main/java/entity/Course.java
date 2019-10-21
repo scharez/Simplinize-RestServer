@@ -5,6 +5,8 @@ import java.util.Date;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name="Course.getCourse",
+                query="SELECT c FROM Course c")
 
 })
 public class Course {

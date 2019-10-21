@@ -257,12 +257,13 @@ public class Repository {
 
     public String assignCourse(Date from, Date to, String place, SkiTeacher instructor) {
 
-
-
         Course course = new Course(from, to, place, instructor);
 
+        em.getTransaction().begin();
+        em.persist(course);
+        em.getTransaction().commit();
 
-        return "LOL";
+        return jb.generateResponse("succes", "assignCourse", "Coures has been assigend successfully");
     }
 
     public String addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -274,7 +275,8 @@ public class Repository {
 
     public String getAllGroups(long courseId) {
 
-        TypedQuery<CourseGroup> query = em.createNamedQuery("CourseGroup.getAllGroups", CourseGroup.class);
+        TypedQuery<CourseGroup> query = em.createNamedQuery("CourseGroup.getCourseGroups", CourseGroup.class);
+        query.setParameter("id", courseId);
 
         List<CourseGroup> groupList = query.getResultList();
 
