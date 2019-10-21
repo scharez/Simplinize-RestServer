@@ -2,10 +2,9 @@ package service;
 
 import annotation.Secure;
 import dto.CourseDTO;
-import entity.Course;
-import entity.Proficiency;
+import dto.CourseGroupDTO;
+import dto.StudentDTO;
 import entity.Role;
-import entity.SkiTeacher;
 import repository.Repository;
 
 import javax.ws.rs.*;
@@ -14,16 +13,41 @@ import javax.ws.rs.core.MediaType;
 @Path("app")
 public class AppService {
 
+    /**
+     * Register a Child
+     *
+     * @param s the Transfer Object the Ski-Teacher Entity
+     * @return a json which can contain an error or a successfully login message
+     */
+
     @Secure(Role.EVERYONE)
-    @Path("addChildrenToCourse/{id}")
+    @Path("registerChildren")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String addChildrenToCourse(@PathParam("id") long courseId, CourseDTO course) {
+    public String registerChildren(StudentDTO s) {
 
-        return Repository.getInstance().assignCourse(course.getFrom(), course.getTo(), course.getPlace(), course.getInstructor());
+        return Repository.getInstance().registerChildren(s.getFirstName(), s.getLastName(), s.getBirthday(), s.getPostCode(),
+                s.getPlace(),s.getHouseNumber(), s.getStreet());
     }
 
+    /**
+     * Add Children to Course
+     *
+     * @param studentId the Transfer Object the Ski-Teacher Entity
+     * @param courseId
+     * @return a json which can contain an error or a successfully login message
+     */
+
+    @Secure(Role.EVERYONE)
+    @Path("addChildrenToCourse")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    public String addChildrenToCourse(@QueryParam("studentId") long studentId, @QueryParam("courseId") long courseId) {
+
+        return Repository.getInstance().addChildrenToCourse(studentId, courseId);
+    }
 
     /**
      * Assign a course
@@ -42,24 +66,26 @@ public class AppService {
         return Repository.getInstance().assignCourse(course.getFrom(), course.getTo(), course.getPlace(), course.getInstructor());
     }
 
+    // Wird eventuell Automatisch erstellt, anhand der Teilnehmeranzahl, Anzahl der Gruppen mit der Proficiency GRÜN
+    // Wird automatisch zum akutellen Course hinzugefügt
     @Secure(Role.ADMIN)
     @Path("createGroup")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String test () {
+    public String createGroup(CourseGroupDTO g) {
 
-        return "";
+        return Repository.getInstance().createGroup(g.getProficiency(), g.getAmount());
     }
 
     @Secure(Role.ADMIN)
-    @Path("addTeacherToGroup/{id}")
+    @Path("addTeacherToGroup")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String addTeacherToGroup(@PathParam("id") long groupId, SkiTeacher skiTeacher) {
+    public String addTeacherToGroup(@QueryParam("skiTeacherId") long skiTeacherId, @QueryParam("groupId") long groupId) {
 
-        return Repository.getInstance().addTeacherToGroup(groupId, skiTeacher);
+        return Repository.getInstance().addTeacherToGroup(groupId, skiTeacherId);
     }
 
     @Secure(Role.ADMIN)
@@ -67,9 +93,9 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getAllGroups() {
+    public String getAllGroups(@QueryParam("courseId") long courseId) {
 
-        return Repository.getInstance().getAllGroups();
+        return Repository.getInstance().getAllGroups(courseId);
     }
 
     @Secure(Role.ADMIN)
@@ -77,48 +103,50 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getAllMembers() {
+    public String getAllMembers(@QueryParam("courseId") long courseId) {
 
-        return Repository.getInstance().getAllMembers();
+        return Repository.getInstance().getAllMembers(courseId);
     }
 
-    @Secure(Role.SKITEAM)
-    @Path("getGroupMembers/{id}")
+    @Secure(Role.ADMIN)
+    @Path("getSkiTeachers")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getGroupMembers(@PathParam("id") long groupId) {
+    public String getSkiTeachers() {
 
-        return "";
+        return Repository.getInstance().getSkiTeachers();
     }
 
     @Secure(Role.SKITEAM)
-    @Path("getGroup/{id}")
+    @Path("getGroupMembers")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getGroup(@PathParam("id") long groupId) {
+    public String getGroupMembers(@QueryParam("groupId") long groupId) {
 
-        return "";
+        return Repository.getInstance().getGroupMembers(groupId);
     }
 
+    //Programmtechnisch dann so programmieren, dass der Skiteacher immer vom akutellen Course selektiert von der DB!!
+
     @Secure(Role.SKITEAM)
-    @Path("getGroupMembers/{proficiency}")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("getGroup")
     @Produces(MediaType.APPLICATION_JSON)
-    @POST
-    public String getGroup(@PathParam("proficiency") Proficiency proficiency) {
+    @GET
+    public String getGroup(@QueryParam("groupId") long groupId) {
 
         return "";
     }
 
     @Secure(Role.SKITEAM)
-    @Path("getProficiency/{id}")
+    @Path("getCourseParticipants")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getProficiency(@PathParam("id") long skiTeacherId) {
+    public String getCourseParticipants(@QueryParam("proficiency") String proficiency) {
 
-        return "";
+        return Repository.getInstance().getCourseParticipants(proficiency);
     }
+
 }

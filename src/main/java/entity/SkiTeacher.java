@@ -15,6 +15,8 @@ import java.util.List;
                 query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.email = :email"),
         @NamedQuery(name="SkiTeacher.getUser",
                 query="SELECT s FROM SkiTeacher s WHERE s.username = :username"),
+        @NamedQuery(name="SkiTeacher.getUserById",
+                query="SELECT s FROM SkiTeacher s WHERE s.id = :id"),
 })
 
 // Implement CountUser in order to get if username is unique

@@ -6,6 +6,8 @@ import java.util.List;
 
 public class SkiTeacherDTO {
 
+    private long id;
+
     private String username;
     private String password;
 
@@ -31,6 +33,10 @@ public class SkiTeacherDTO {
 
     public SkiTeacherDTO(String username) {
         this.username = username;
+    }
+
+    public SkiTeacherDTO(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

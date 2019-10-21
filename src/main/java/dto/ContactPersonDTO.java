@@ -9,6 +9,8 @@ public class ContactPersonDTO {
     private String password;
     private String phoneNumber;
 
+    public ContactPersonDTO() {}
+
     public ContactPersonDTO(String firstName, String lastName, String email, String password, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;

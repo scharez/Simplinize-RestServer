@@ -9,12 +9,12 @@ public class JsonBuilder {
 
     public JsonBuilder() {}
 
-    public String generateResponse(String typ, String message, String content) {
+    public String generateResponse(String typ, String resource, String content) {
 
         JSONObject json = new JSONObject();
 
         json.put("typ", typ)
-                .put("message", message)
+                .put("resource", resource)
                 .put("content", content);
 
         System.out.println();

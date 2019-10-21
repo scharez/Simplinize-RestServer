@@ -52,6 +52,40 @@ public class Repository {
         return jb.generateResponse("error", "jwt", "Wrong Token!");
     }
 
+    private SkiTeacher getSkiTeacher() {
+
+        String username = jwt.checkSubject(this.token);
+
+        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
+        query.setParameter("username", username);
+
+        List<SkiTeacher> result = query.getResultList();
+
+        // check if user exists, but user should exist bc he has a token lol
+        if (result.size() == 0) {
+            return null;
+        }
+
+        return result.get(0);
+    }
+
+    private ContactPerson getContactPerson() {
+
+        String email = jwt.checkSubject(this.token);
+
+        TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getPerson", ContactPerson.class);
+        query.setParameter("email", email);
+
+        List<ContactPerson> result = query.getResultList();
+
+        // check if user exists, but user should exist bc he has a token
+        if (result.size() == 0) {
+            return null;
+        }
+
+        return result.get(0);
+    }
+
     public String loginTeacher(String username, String password) {
 
         TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
@@ -223,20 +257,22 @@ public class Repository {
 
     public String assignCourse(Date from, Date to, String place, SkiTeacher instructor) {
 
+
+
         Course course = new Course(from, to, place, instructor);
 
 
         return "LOL";
     }
 
-    public String addTeacherToGroup(long groupId, SkiTeacher skiTeacher) {
+    public String addTeacherToGroup(long groupId, long skiTeacherId) {
 
 
 
         return "";
     }
 
-    public String getAllGroups() {
+    public String getAllGroups(long courseId) {
 
         TypedQuery<CourseGroup> query = em.createNamedQuery("CourseGroup.getAllGroups", CourseGroup.class);
 
@@ -251,7 +287,7 @@ public class Repository {
         return jb.generateDataResponse("success","getAllGroups",lol);
     }
 
-    public String getAllMembers() {
+    public String getAllMembers(long courseId) {
 
         TypedQuery<Student> query = em.createNamedQuery("Student.getAllMembers", Student.class);
 
@@ -263,4 +299,33 @@ public class Repository {
         return "";
     }
 
+    public String registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
+
+        return "";
+    }
+
+    public String createGroup(String proficiency, int amount) {
+
+        return "";
+    }
+
+    public String getGroupMembers(long groupId) {
+
+        return "";
+    }
+
+    public String getCourseParticipants(String proficiency) {
+
+        return "";
+    }
+
+    public String addChildrenToCourse(long studentId, long courseId) {
+
+        return "";
+    }
+
+    public String getSkiTeachers() {
+
+        return "";
+    }
 }
