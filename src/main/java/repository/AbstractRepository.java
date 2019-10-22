@@ -11,7 +11,26 @@ public abstract class AbstractRepository<T> {
         this.entityClass = entityClass;
     }
 
-    //EntityManager em = Persistence.createEntityManagerFactory("SimplinizePU").createEntityManager();
+    EntityManager em = Persistence.createEntityManagerFactory("SimplinizePU").createEntityManager();
+
+
+    public void create(T entity) {
+        em.getTransaction().begin();
+        em.persist(entity);
+        em.getTransaction().commit();
+    }
+
+    public void update(T entity) {
+        em.getTransaction().begin();
+        em.merge(entity);
+        em.getTransaction().commit();
+    }
+
+    public void remove(T entity) {
+        em.getTransaction().begin();
+        em.remove(entity);
+        em.getTransaction().commit();
+    }
 
 
 

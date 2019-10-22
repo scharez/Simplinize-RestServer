@@ -99,13 +99,13 @@ public class AppService {
     }
 
     @Secure(Role.ADMIN)
-    @Path("getAllMembers")
+    @Path("getAllCourseMembers")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getAllMembers(@QueryParam("courseId") long courseId) {
+    public String getAllCourseMembers(@QueryParam("courseId") long courseId) {
 
-        return Repository.getInstance().getAllMembers(courseId);
+        return Repository.getInstance().getAllCourseMembers(courseId);
     }
 
     @Secure(Role.ADMIN)

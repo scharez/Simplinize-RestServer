@@ -9,7 +9,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name="Student.getAllMembers",
             query="select s from Student s"),
-        @NamedQuery(name="Student.getACourseMembers",
+        @NamedQuery(name="Student.getAllCourseMembers",
                 query="select s from Student s"),
 })
 public class Student {

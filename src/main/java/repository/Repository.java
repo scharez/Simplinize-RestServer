@@ -263,7 +263,7 @@ public class Repository {
         em.persist(course);
         em.getTransaction().commit();
 
-        return jb.generateResponse("succes", "assignCourse", "Coures has been assigend successfully");
+        return jb.generateResponse("succes", "assignCourse", "Course has been assigend successfully");
     }
 
     public String addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -289,21 +289,27 @@ public class Repository {
         return jb.generateDataResponse("success","getAllGroups",lol);
     }
 
-    public String getAllMembers(long courseId) {
+    public String getAllCourseMembers(long courseId) {
 
         TypedQuery<Student> query = em.createNamedQuery("Student.getAllMembers", Student.class);
 
         List<Student> studentList = query.getResultList();
 
         if(studentList.size() == 0) {
-            return jb.generateResponse("error", "getAllMembers", "There are no members");
+            return jb.generateResponse("error", "getAllCourseMembers", "There are no members");
         }
         return "";
     }
 
     public String registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
 
-        return "";
+        Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street);
+
+        em.getTransaction().commit();
+        em.persist(student);
+        em.getTransaction().commit();
+
+        return jb.generateResponse("error", "registerChildren", "Child has been registerd");
     }
 
     public String createGroup(String proficiency, int amount) {
