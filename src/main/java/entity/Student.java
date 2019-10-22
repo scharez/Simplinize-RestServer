@@ -11,6 +11,8 @@ import java.util.List;
             query="select s from Student s"),
         @NamedQuery(name="Student.getAllCourseMembers",
                 query="select s from Student s"),
+        @NamedQuery(name="Student.getStudentById",
+                query="select s from Student s where s.id = :id"),
 })
 public class Student {
 

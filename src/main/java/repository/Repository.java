@@ -52,43 +52,18 @@ public class Repository {
         return jb.generateResponse("error", "jwt", "Wrong Token!");
     }
 
-    private SkiTeacher getSkiTeacher() {
+    private Person getPerson() {
 
-        String username = jwt.checkSubject(this.token);
+        String subject = jwt.checkSubject(this.token);
 
-        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
-        query.setParameter("username", username);
 
-        List<SkiTeacher> result = query.getResultList();
 
-        // check if user exists, but user should exist bc he has a token lol
-        if (result.size() == 0) {
-            return null;
-        }
-
-        return result.get(0);
-    }
-
-    private ContactPerson getContactPerson() {
-
-        String email = jwt.checkSubject(this.token);
-
-        TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getPerson", ContactPerson.class);
-        query.setParameter("email", email);
-
-        List<ContactPerson> result = query.getResultList();
-
-        // check if user exists, but user should exist bc he has a token
-        if (result.size() == 0) {
-            return null;
-        }
-
-        return result.get(0);
+        return new Person();
     }
 
     public String loginTeacher(String username, String password) {
 
-        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
+        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUserByUsername", SkiTeacher.class);
         query.setParameter("username", username);
 
         if (query.getResultList().size() == 0) {
@@ -110,13 +85,14 @@ public class Repository {
             e.printStackTrace();
         }
 
-        String jwtToken = jwt.create(user.getUsername(), user.getRoles().toArray());
+        String jwtToken = jwt.create(user.getEmail(), user.getRoles().toArray());
 
         return jb.generateResponse("success", "loginTeacher", jwtToken);
     }
 
     public String addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
 
+        roles.add(Role.SKITEAM);
         roles.add(Role.SKITEAM);
 
         SkiTeacher user = new SkiTeacher(firstName, lastName, email, roles);
@@ -126,7 +102,7 @@ public class Repository {
 
         Token token = new Token(user);
 
-        TypedQuery<Long> queryUniqueMail = em.createNamedQuery("SkiTeacher.countEmail", Long.class);
+        TypedQuery<Long> queryUniqueMail = em.createNamedQuery("SkiTeacher.uniqueEmail", Long.class);
         queryUniqueMail.setParameter("email", user.getEmail());
 
         if(queryUniqueMail.getSingleResult() != 0) {
@@ -213,7 +189,7 @@ public class Repository {
 
         Token token = new Token(person);
 
-        TypedQuery<Long> queryUniqueEmail = em.createNamedQuery("ContactPerson.uniqueName", Long.class);
+        TypedQuery<Long> queryUniqueEmail = em.createNamedQuery("ContactPerson.uniqueEmail", Long.class);
         queryUniqueEmail.setParameter("email", email);
 
         long numberOfEntriesEmail = queryUniqueEmail.getSingleResult();
@@ -284,9 +260,9 @@ public class Repository {
             return jb.generateResponse("error", "getAllGroups","There are no Groups");
         }
 
-        JSONArray lol = new JSONArray(groupList);
+        JSONArray groups = new JSONArray(groupList);
 
-        return jb.generateDataResponse("success","getAllGroups",lol);
+        return jb.generateDataResponse("success","getAllGroups", groups);
     }
 
     public String getAllCourseMembers(long courseId) {
@@ -309,7 +285,56 @@ public class Repository {
         em.persist(student);
         em.getTransaction().commit();
 
-        return jb.generateResponse("error", "registerChildren", "Child has been registerd");
+        return jb.generateResponse("success", "registerChildren", "Child has been registerd");
+    }
+
+    public String getAllChildren() {
+
+
+
+
+        return "";
+    }
+
+    public String getChildren(long studentId) {
+
+        return "";
+    }
+
+    public String addChildrenToCourse(long studentId, long courseId) {
+
+        TypedQuery<Student> queryStudent = em.createNamedQuery("Student.getStudentById", Student.class);
+        queryStudent.setParameter("id", studentId);
+
+        List<Student> studentList = queryStudent.getResultList();
+
+        if(studentList.size() == 0) {
+            return jb.generateResponse("error", "addChildrenToCourse", "Student does not exist");
+        }
+
+        Student student = studentList.get(0);
+
+        TypedQuery<Course> queryCourse = em.createNamedQuery("Course.getCourseById", Course.class);
+        queryCourse.setParameter("id", courseId);
+
+        List<Course> courseList = queryCourse.getResultList();
+
+        if(courseList.size() == 0) {
+            return jb.generateResponse("error", "addChildrenToCourse", "Course error ka wos");
+        }
+
+        Course course = courseList.get(0);
+
+
+        Participation participation = new Participation();
+
+
+        return "";
+    }
+
+    public Course getCurrentCourse() {
+
+        return null;
     }
 
     public String createGroup(String proficiency, int amount) {
@@ -327,13 +352,14 @@ public class Repository {
         return "";
     }
 
-    public String addChildrenToCourse(long studentId, long courseId) {
-
-        return "";
-    }
-
     public String getSkiTeachers() {
 
         return "";
     }
+
+    public void init() {
+
+    }
+
+
 }

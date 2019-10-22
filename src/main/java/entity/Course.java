@@ -6,7 +6,9 @@ import java.util.Date;
 @Entity
 @NamedQueries({
         @NamedQuery(name="Course.getCourse",
-                query="SELECT c FROM Course c")
+                query="SELECT c FROM Course c"),
+        @NamedQuery(name="Course.getCourseById",
+                query="SELECT c FROM Course c where c.id = :id")
 
 })
 public class Course {

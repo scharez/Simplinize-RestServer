@@ -11,9 +11,11 @@ import java.util.List;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name="SkiTeacher.countEmail",
+        @NamedQuery(name="SkiTeacher.uniqueEmail",
                 query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.email = :email"),
         @NamedQuery(name="SkiTeacher.getUser",
+                query="SELECT s FROM SkiTeacher s WHERE s.email = :email"),
+        @NamedQuery(name="SkiTeacher.getUserByUsername",
                 query="SELECT s FROM SkiTeacher s WHERE s.username = :username"),
         @NamedQuery(name="SkiTeacher.getUserById",
                 query="SELECT s FROM SkiTeacher s WHERE s.id = :id"),
@@ -26,11 +28,13 @@ public class SkiTeacher {
     @Id
     private long id;
 
+    @Column(unique = true)
     private String username;
     private String password;
     private String firstName;
     private String lastName;
     private String birthday;
+    @Column(unique = true)
     private String email;
     private long number;
 

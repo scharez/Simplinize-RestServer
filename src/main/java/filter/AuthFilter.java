@@ -61,7 +61,7 @@ public class AuthFilter implements ContainerRequestFilter {
 
         for(Role role: roles) {
             for(Role userRole: userRoles) {
-                if(role.equals(userRole) || role.equals(Role.EVERYONE)) return true;
+                if(role.equals(userRole)) /*|| role.equals(Role.EVERYONE))*/ return true;
             }
         }
         return false;

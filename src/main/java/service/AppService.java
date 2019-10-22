@@ -13,6 +13,16 @@ import javax.ws.rs.core.MediaType;
 @Path("app")
 public class AppService {
 
+    @Path("init")
+    @GET
+    @Produces({MediaType.TEXT_HTML})
+    public String inti() {
+
+        Repository.getInstance().init();
+
+        return "DB wurde initialisiert";
+    }
+
     /**
      * Register a Child
      *
@@ -20,7 +30,7 @@ public class AppService {
      * @return a json which can contain an error or a successfully login message
      */
 
-    @Secure(Role.EVERYONE)
+    @Secure(Role.CONTACTPERSON)
     @Path("registerChildren")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,12 +44,12 @@ public class AppService {
     /**
      * Add Children to Course
      *
-     * @param studentId the Transfer Object the Ski-Teacher Entity
+     * @param studentId
      * @param courseId
      * @return a json which can contain an error or a successfully login message
      */
 
-    @Secure(Role.EVERYONE)
+    @Secure(Role.CONTACTPERSON)
     @Path("addChildrenToCourse")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -48,6 +58,42 @@ public class AppService {
 
         return Repository.getInstance().addChildrenToCourse(studentId, courseId);
     }
+
+    /**
+     * Get all Children of Contactperson
+     *
+     * @return a json which can contain an error or a successfully login message
+     */
+
+    @Secure(Role.CONTACTPERSON)
+    @Path("getAllChildren")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    public String getAllChildren() {
+
+        return Repository.getInstance().getAllChildren();
+    }
+
+    /**
+     * Get Children of Contactperson
+     *
+     * @return a json which can contain an error or a successfully login message
+     */
+
+    @Secure(Role.CONTACTPERSON)
+    @Path("getChildren")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    public String getChildren(@QueryParam("studentId") long studentId) {
+
+        return Repository.getInstance().getChildren(studentId);
+    }
+
+    /*
+------------------------------------------------------------------------------------------------------------------------
+    */
 
     /**
      * Assign a course
@@ -117,6 +163,10 @@ public class AppService {
 
         return Repository.getInstance().getSkiTeachers();
     }
+
+    /*
+------------------------------------------------------------------------------------------------------------------------
+    */
 
     @Secure(Role.SKITEAM)
     @Path("getGroupMembers")

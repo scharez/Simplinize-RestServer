@@ -17,6 +17,9 @@ public class Participation {
     @ManyToOne // Das ist die einzahlende Person
     ContactPerson person;
 
+    @ManyToOne
+    Course course;
+
     private boolean registration;
     private boolean deposit;
     private String rank;
@@ -26,9 +29,10 @@ public class Participation {
 
     public Participation() { }
 
-    public Participation(Student student, ContactPerson person, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
+    public Participation(Student student, ContactPerson person, Course course, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
         this.student = student;
         this.person = person;
+        this.course = course;
         this.registration = registration;
         this.deposit = deposit;
         this.rank = rank;
@@ -59,6 +63,14 @@ public class Participation {
 
     public void setPerson(ContactPerson person) {
         this.person = person;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 
     public boolean isRegistration() {

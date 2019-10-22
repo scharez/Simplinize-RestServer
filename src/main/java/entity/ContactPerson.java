@@ -14,7 +14,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name="ContactPerson.getPerson",
                 query="select p from ContactPerson p WHERE p.email = :email"),
-        @NamedQuery(name="ContactPerson.uniqueName",
+        @NamedQuery(name="ContactPerson.uniqueEmail",
                 query = "select count(p) from ContactPerson p where p.email = :email")
 })
 public class ContactPerson {
@@ -26,6 +26,7 @@ public class ContactPerson {
     private String firstName;
     private String lastName;
 
+    @Column(unique = true)
     private String email;
     private String password;
     private String phone;
