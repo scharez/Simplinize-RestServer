@@ -14,11 +14,8 @@ public class Participation {
     @ManyToOne
     Student student;
 
-    @ManyToOne // Das ist die einzahlende Person wenn ContactPerson
-    ContactPerson contactPerson;
-
-    @ManyToOne // Das ist die einzahlende Person wenn SkiTeacher
-    SkiTeacher skiTeacherPerson;
+    @ManyToOne // Das ist die einzahlende Person, kann SkiTeacher oder ContactPerson sein
+    Person person;
 
     @ManyToOne
     Course course;
@@ -32,10 +29,9 @@ public class Participation {
 
     public Participation() { }
 
-    public Participation(Student student, ContactPerson contactPerson, SkiTeacher skiTeacherPerson, Course course, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
+    public Participation(Student student, Person person, Course course, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
         this.student = student;
-        this.contactPerson = contactPerson;
-        this.skiTeacherPerson = skiTeacherPerson;
+        this.person = person;
         this.course = course;
         this.registration = registration;
         this.deposit = deposit;
@@ -61,20 +57,12 @@ public class Participation {
         this.student = student;
     }
 
-    public ContactPerson getContactPerson() {
-        return contactPerson;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setContactPerson(ContactPerson person) {
-        this.contactPerson = contactPerson;
-    }
-
-    public SkiTeacher getSkiTeacherPerson() {
-        return skiTeacherPerson;
-    }
-
-    public void setSkiTeacherPerson(SkiTeacher skiTeacherPerson) {
-        this.skiTeacherPerson = skiTeacherPerson;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public Course getCourse() {

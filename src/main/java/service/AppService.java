@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 @Path("app")
 public class AppService {
 
+    @Secure(Role.ADMIN)
     @Path("init")
     @GET
     @Produces({MediaType.TEXT_HTML})

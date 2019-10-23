@@ -17,11 +17,15 @@ public class Token {
 
     private String token;
 
+
+
     @OneToOne(mappedBy = "token", cascade = CascadeType.PERSIST)
     private SkiTeacher skiTeacher;
 
     @OneToOne(mappedBy = "token", cascade = CascadeType.PERSIST)
     private ContactPerson contactPerson;
+
+
 
     public Token(){}
 

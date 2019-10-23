@@ -51,7 +51,7 @@ public class AuthFilter implements ContainerRequestFilter {
                     rc.abortWith(res);
                 }
             } catch (Exception ex) {
-                Response res = validateRequest("Auth-Token Error");
+                Response res = validateRequest("Auth-Token Error, Please login first!");
                 rc.abortWith(res);
             }
         }

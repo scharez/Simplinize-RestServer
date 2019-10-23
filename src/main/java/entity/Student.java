@@ -31,8 +31,7 @@ public class Student {
     private String houseNumber;
     private String street;
 
-    public Student() {
-    }
+    public Student() { }
 
     public Student(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
         this.firstName = firstName;
