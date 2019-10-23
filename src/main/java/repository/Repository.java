@@ -52,18 +52,47 @@ public class Repository {
         return jb.generateResponse("error", "jwt", "Wrong Token!");
     }
 
-    private Person getPerson() {
+    private ContactPerson getContactPerson() {
 
-        String subject = jwt.checkSubject(this.token);
+        String email = jwt.checkSubject(this.token);
 
+        TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getUser", ContactPerson.class);
+        query.setParameter("email", email);
 
+        List<ContactPerson> result = query.getResultList();
 
-        return new Person();
+        // check if user exists, but user should exist bc he has a token
+        if (result.size() == 0) {
+            return null;
+        }
+
+        return result.get(0);
+    }
+
+    private SkiTeacher getSkiTeacher() {
+
+        String username = jwt.checkSubject(this.token);
+
+        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
+        query.setParameter("username", username);
+
+        List<SkiTeacher> result = query.getResultList();
+
+        // check if user exists, but user should exist bc he has a token lol
+        if (result.size() == 0) {
+            return null;
+        }
+
+        return result.get(0);
+    }
+
+    private boolean isSkiTeacher(Object object) {
+        return object instanceof SkiTeacher ? true : false;
     }
 
     public String loginTeacher(String username, String password) {
 
-        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUserByUsername", SkiTeacher.class);
+        TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
         query.setParameter("username", username);
 
         if (query.getResultList().size() == 0) {
@@ -85,7 +114,7 @@ public class Repository {
             e.printStackTrace();
         }
 
-        String jwtToken = jwt.create(user.getEmail(), user.getRoles().toArray());
+        String jwtToken = jwt.create(user.getUsername(), user.getRoles().toArray());
 
         return jb.generateResponse("success", "loginTeacher", jwtToken);
     }
@@ -146,7 +175,7 @@ public class Repository {
 
     public String loginContactPerson(String email, String password) {
 
-        TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getPerson", ContactPerson.class);
+        TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getUser", ContactPerson.class);
         query.setParameter("email", email);
 
         List<ContactPerson> result = query.getResultList();
@@ -173,8 +202,6 @@ public class Repository {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-
-        person.setRole(Role.CONTACTPERSON);
 
         String jwtToken = jwt.create(person.getEmail(), new Role[]{person.getRole()});
 
@@ -325,6 +352,9 @@ public class Repository {
 
         Course course = courseList.get(0);
 
+        if(isSkiTeacher(getSkiTeacher())) {
+
+        }
 
         Participation participation = new Participation();
 

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name="ContactPerson.getPerson",
+        @NamedQuery(name="ContactPerson.getUser",
                 query="select p from ContactPerson p WHERE p.email = :email"),
         @NamedQuery(name="ContactPerson.uniqueEmail",
                 query = "select count(p) from ContactPerson p where p.email = :email")

@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -14,14 +15,10 @@ import java.util.List;
         @NamedQuery(name="SkiTeacher.uniqueEmail",
                 query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.email = :email"),
         @NamedQuery(name="SkiTeacher.getUser",
-                query="SELECT s FROM SkiTeacher s WHERE s.email = :email"),
-        @NamedQuery(name="SkiTeacher.getUserByUsername",
                 query="SELECT s FROM SkiTeacher s WHERE s.username = :username"),
         @NamedQuery(name="SkiTeacher.getUserById",
                 query="SELECT s FROM SkiTeacher s WHERE s.id = :id"),
 })
-
-// Implement CountUser in order to get if username is unique
 public class SkiTeacher {
 
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,7 +44,12 @@ public class SkiTeacher {
     @OneToOne(cascade = CascadeType.PERSIST)
     private Token token;
 
-    public SkiTeacher() {}
+    @ManyToMany
+    private List<Student> students;
+
+    public SkiTeacher() {
+        this.students = new ArrayList<>();
+    }
 
     public SkiTeacher(String username, String password, String firstName, String lastName, String birthday, String email, long number, List<Role> roles) {
         this.username = username;
@@ -154,6 +156,14 @@ public class SkiTeacher {
 
     public void setToken(Token token) {
         this.token = token;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 
     private void hashPassword(String password) {
