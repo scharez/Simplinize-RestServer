@@ -132,6 +132,8 @@ public class Repository {
 
         Token token = new Token(person);
 
+        person.setToken(token);
+
         TypedQuery<Long> queryUniqueMail = em.createNamedQuery("Person.uniqueEmail", Long.class);
         queryUniqueMail.setParameter("email", person.getEmail());
 
@@ -142,8 +144,8 @@ public class Repository {
         executor.execute(() -> mailer.sendSetPasswordMail(token, person));
 
         em.getTransaction().begin();
-        em.persist(person);
         em.persist(token);
+        em.persist(person);
         em.getTransaction().commit();
 
         return jb.generateResponse("success", "addSkiTeacher", "SkiTeacher added");
@@ -168,7 +170,7 @@ public class Repository {
         user.setPassword(password);
 
         em.getTransaction().begin();
-        //em.remove(dbToken);
+        em.remove(dbToken);
         em.getTransaction().commit();
 
         return "Password successfully set";
@@ -218,6 +220,8 @@ public class Repository {
         person.setPassword(password);
         person.setPhone(phoneNumber);
 
+        person.setVerified(false);
+
         person.setRole(Role.CONTACTPERSON);
 
         Token token = new Token(person);
@@ -236,6 +240,7 @@ public class Repository {
         executor.execute(() -> mailer.sendConfirmation(token, person));
 
         em.getTransaction().begin();
+        em.persist(token);
         em.persist(person);
         em.getTransaction().commit();
 
@@ -315,7 +320,6 @@ public class Repository {
         Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street);
 
         Person person = getPerson();
-
 
         if (person != null) {
             person.getStudents().add(student);

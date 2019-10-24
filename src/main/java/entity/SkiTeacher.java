@@ -1,13 +1,6 @@
 package entity;
 
-import org.bouncycastle.util.encoders.Hex;
-
 import javax.persistence.*;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,9 +26,6 @@ public class SkiTeacher extends Person {
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
-
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Token token;
 
     public SkiTeacher(String username, Date birthday, List<Role> roles) {
         this.username = username;
@@ -69,11 +59,4 @@ public class SkiTeacher extends Person {
         this.roles = roles;
     }
 
-    public Token getToken() {
-        return token;
-    }
-
-    public void setToken(Token token) {
-        this.token = token;
-    }
 }

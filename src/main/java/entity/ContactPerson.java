@@ -17,9 +17,6 @@ public class ContactPerson extends Person{
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    private Token token;
-
     public ContactPerson(){ }
 
     public ContactPerson(Role role, String phone) {
@@ -49,13 +46,5 @@ public class ContactPerson extends Person{
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Token getToken() {
-        return token;
-    }
-
-    public void setToken(Token token) {
-        this.token = token;
     }
 }

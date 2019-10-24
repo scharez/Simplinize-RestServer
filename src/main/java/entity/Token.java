@@ -1,7 +1,6 @@
 package entity;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,7 +15,6 @@ public class Token {
     private long id;
 
     private String token;
-
 
 
     @OneToOne(mappedBy = "token", cascade = CascadeType.PERSIST)
