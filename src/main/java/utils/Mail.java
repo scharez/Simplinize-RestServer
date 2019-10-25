@@ -51,7 +51,10 @@ public class Mail {
                     Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
             message.setSubject("Set your simplinize password");
 
-            String mailBody = "Hello " + user.getFirstName() + " " + user.getLastName() + "<br>" + "Please set a password for your account! <br> Your token --> " +  token.getToken();
+            String mailBody = "Hello " + user.getFirstName() + " " +
+                    user.getLastName() + "<br>" +
+                    "Please set a password for your account! <br> Your token --> " +
+                    token.getToken();
 
             //button url e.g https://simplinize.scharez.at/auth/setPassword/30945020293840949094
 
@@ -81,7 +84,8 @@ public class Mail {
                     Message.RecipientType.TO, InternetAddress.parse(person.getEmail()));
             message.setSubject("Pleas confirm your Email");
 
-            String mailBody = "Hello " + person.getFirstName() + " " + person.getLastName() + "<br>" + "Please confirm your Email!" +
+            String mailBody = "Hello " + person.getFirstName() + " " + person.getLastName() +
+                    "<br>" + "Please confirm your Email!" +
                     "<br> Token --> " + token.getToken();
 
             MimeBodyPart mimeBodyPart = new MimeBodyPart();

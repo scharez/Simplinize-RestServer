@@ -33,8 +33,11 @@ public class Person {
 
     private String salt;
 
-    @ManyToMany
+    @ManyToMany()
     private List<Student> students;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    private Token token;
 
     public Person () {
         this.students = new ArrayList<>();
@@ -102,6 +105,14 @@ public class Person {
 
     public void setStudents(List<Student> students) {
         this.students = students;
+    }
+
+    public Token getToken() {
+        return token;
+    }
+
+    public void setToken(Token token) {
+        this.token = token;
     }
 
     private void hashPassword(String password) {
