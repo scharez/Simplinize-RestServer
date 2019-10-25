@@ -9,7 +9,6 @@ import java.util.Date;
                 query="SELECT c FROM Course c"),
         @NamedQuery(name="Course.getCourseById",
                 query="SELECT c FROM Course c where c.id = :id")
-
 })
 public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)

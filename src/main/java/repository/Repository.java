@@ -269,6 +269,26 @@ public class Repository {
         return "<h1> Verificated! </h1>";
     }
 
+    public String registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
+
+        Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street);
+
+        Person person = getPerson();
+
+        if (person != null) {
+            person.getStudents().add(student);
+        } else {
+            return jwtError();
+        }
+
+        em.getTransaction().commit();
+        em.persist(student);
+        em.merge(person);
+        em.getTransaction().commit();
+
+        return jb.generateResponse("success", "registerChildren", "Child has been registerd");
+    }
+
     public String assignCourse(Date from, Date to, String place, SkiTeacher instructor) {
 
         Course course = new Course(from, to, place, instructor);
@@ -278,6 +298,13 @@ public class Repository {
         em.getTransaction().commit();
 
         return jb.generateResponse("succes", "assignCourse", "Course has been assigend successfully");
+    }
+
+    public String createGroup(String proficiency, int amount) {
+
+
+
+        return "";
     }
 
     public String addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -315,25 +342,7 @@ public class Repository {
         return "";
     }
 
-    public String registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
 
-        Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street);
-
-        Person person = getPerson();
-
-        if (person != null) {
-            person.getStudents().add(student);
-        } else {
-            return jwtError();
-        }
-
-        em.getTransaction().commit();
-        em.persist(student);
-        em.merge(person);
-        em.getTransaction().commit();
-
-        return jb.generateResponse("success", "registerChildren", "Child has been registerd");
-    }
 
     public String getAllChildren() {
 
@@ -387,6 +396,8 @@ public class Repository {
 
     private Course getCurrentCourse() {
 
+        // TypedQuery<Course> query =
+
 
         return null;
     }
@@ -401,10 +412,7 @@ public class Repository {
         return courseList.get(0);
     }
 
-    public String createGroup(String proficiency, int amount) {
 
-        return "";
-    }
 
     public String getGroupMembers(long groupId) {
 
