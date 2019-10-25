@@ -1,15 +1,19 @@
 package dto;
 
+import entity.Role;
+
 public class LoginDTO {
 
     private String credentials;
     private String password;
+    private Role type;
 
     public LoginDTO() {}
 
-    public LoginDTO(String credentials, String password) {
+    public LoginDTO(String credentials, String password, Role type) {
         this.credentials = credentials;
         this.password = password;
+        this.type = type;
     }
 
     public String getCredentials() {
@@ -26,5 +30,13 @@ public class LoginDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getType() {
+        return type;
+    }
+
+    public void setType(Role type) {
+        this.type = type;
     }
 }

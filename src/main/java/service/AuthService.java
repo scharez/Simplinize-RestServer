@@ -18,13 +18,13 @@ public class AuthService {
      * @return a json which can contain an error or a successfully login message
      */
 
-    @Path("loginTeacher")
+    @Path("login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String loginTeacher(LoginDTO login) {
+    public String login(LoginDTO login) {
 
-        return Repository.getInstance().loginTeacher(login.getCredentials(), login.getPassword());
+        return Repository.getInstance().login(login);
     }
 
     /**
@@ -34,7 +34,7 @@ public class AuthService {
      * @return a json which can contain an error or a successfully register message
      */
 
-    @Path("addSkiTeacher")
+    @Path("addSkiTeacher") // kann ja eigentlich nur der ADMIN aufrufen daher bleibt es eine einzelne Schnittstelle
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
@@ -57,22 +57,6 @@ public class AuthService {
     public String setPassword(@QueryParam("token") String token, SkiTeacherDTO st){
 
         return Repository.getInstance().setPassword4SkiTeacher(token, st.getPassword());
-    }
-
-    /**
-     * Login a ContactPerson
-     *
-     * @param login the Transfer Object of Login
-     * @return a json which can contain an error or a successfully login message
-     */
-
-    @Path("loginContactPerson")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @POST
-    public String loginContactPerson(LoginDTO login) {
-
-        return Repository.getInstance().loginContactPerson(login.getCredentials(), login.getPassword());
     }
 
     /**

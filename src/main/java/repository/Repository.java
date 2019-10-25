@@ -1,5 +1,6 @@
 package repository;
 
+import dto.LoginDTO;
 import entity.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
@@ -86,7 +87,21 @@ public class Repository {
         return result.get(0);
     }
 
-    public String loginTeacher(String username, String password) {
+    public String login(LoginDTO login) {
+
+        switch (login.getType()) {
+            case CONTACTPERSON:
+                return loginContactPerson(login.getCredentials(), login.getPassword());
+
+            case SKITEACHER:
+                    return loginTeacher(login.getCredentials(), login.getPassword());
+
+            default:
+                return jb.generateResponse("error", "login", "Something went wrong");
+        }
+    }
+
+    private String loginTeacher(String username, String password) {
 
         TypedQuery<SkiTeacher> query = em.createNamedQuery("SkiTeacher.getUser", SkiTeacher.class);
         query.setParameter("username", username);
@@ -174,7 +189,7 @@ public class Repository {
         return "Password successfully set";
     }
 
-    public String loginContactPerson(String email, String password) {
+    private String loginContactPerson(String email, String password) {
 
         TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getUser", ContactPerson.class);
         query.setParameter("email", email);
@@ -315,7 +330,6 @@ public class Repository {
         Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street);
 
         Person person = getPerson();
-
 
         if (person != null) {
             person.getStudents().add(student);
