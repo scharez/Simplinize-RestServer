@@ -23,12 +23,12 @@ public class JsonBuilder {
         return json.toString();
     }
 
-    public String generateDataResponse(String typ, String message, JSONArray data) {
+    public String generateDataResponse(String resource, JSONArray data) {
 
         JSONObject json = new JSONObject();
 
-        json.put("typ", typ)
-                .put("message", message)
+        json.put("typ", "data")
+                .put("resource", resource)
                 .put("data", data);
 
         System.out.println();

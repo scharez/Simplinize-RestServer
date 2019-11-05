@@ -23,6 +23,9 @@ public class SkiTeacher extends Person {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
+    @Temporal(TemporalType.DATE)
+    private Date joined;
+
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -31,6 +34,7 @@ public class SkiTeacher extends Person {
         this.username = username;
         this.birthday = birthday;
         this.roles = roles;
+        this.joined = new Date();
     }
 
     public SkiTeacher() {}

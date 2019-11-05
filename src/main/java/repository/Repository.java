@@ -9,6 +9,7 @@ import utils.JwtHelper;
 import utils.Mail;
 
 import javax.persistence.*;
+import javax.ws.rs.core.Response;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -131,7 +132,9 @@ public class Repository {
 
         String jwtToken = jwt.create(user.getEmail(), user.getRoles().toArray());
 
-        return jb.generateResponse("success", "loginTeacher", jwtToken);
+        JSONArray token = new JSONArray(jwtToken);
+
+        return jb.generateDataResponse( "loginTeacher", token);
     }
 
     public String addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -161,7 +164,7 @@ public class Repository {
         em.persist(token);
         em.getTransaction().commit();
 
-        return jb.generateResponse("success", "addSkiTeacher", "SkiTeacher added");
+        return jb.generateResponse("ok", "addSkiTeacher", "SkiTeacher added");
     }
 
     public String setPassword4SkiTeacher(String token, String password) {
@@ -221,7 +224,9 @@ public class Repository {
 
         String jwtToken = jwt.create(person.getEmail(), new Role[]{person.getRole()});
 
-        return jb.generateResponse("success", "loginContactPerson", jwtToken);
+        JSONArray token = new JSONArray(jwtToken);
+
+        return jb.generateDataResponse( "loginContactPerson", token);
     }
 
     public String registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
@@ -254,7 +259,7 @@ public class Repository {
         em.persist(person);
         em.getTransaction().commit();
 
-        return jb.generateResponse("success", "registerContactPerson", "Please confirm your email now");
+        return jb.generateResponse("ok", "registerContactPerson", "Please confirm your email now");
     }
 
     public String confirmMailContactPerson(String token) {
@@ -287,7 +292,7 @@ public class Repository {
         em.persist(course);
         em.getTransaction().commit();
 
-        return jb.generateResponse("succes", "assignCourse", "Course has been assigend successfully");
+        return jb.generateResponse("ok", "assignCourse", "Course has been assigend successfully");
     }
 
     public String addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -310,7 +315,7 @@ public class Repository {
 
         JSONArray groups = new JSONArray(groupList);
 
-        return jb.generateDataResponse("success","getAllGroups", groups);
+        return jb.generateDataResponse("getAllGroups", groups);
     }
 
     public String getAllCourseMembers(long courseId) {
@@ -342,7 +347,7 @@ public class Repository {
         em.merge(person);
         em.getTransaction().commit();
 
-        return jb.generateResponse("success", "registerChildren", "Child has been registerd");
+        return jb.generateResponse("ok", "registerChildren", "Child has been registerd");
     }
 
     public String getAllChildren() {
