@@ -51,7 +51,7 @@ public class Repository {
     }
 
     private String jwtError() {
-        return jb.generateResponse("error", "jwt", "Server error");
+        return jb.genRes("error", "jwt", "Server error");
     }
 
     private Person getPerson() {
@@ -98,7 +98,7 @@ public class Repository {
                     return loginTeacher(login.getCredentials(), login.getPassword());
 
             default:
-                return jb.generateResponse("error", "login", "Something went wrong");
+                return jb.genRes("error", "login", "Something went wrong");
         }
     }
 
@@ -108,13 +108,13 @@ public class Repository {
         query.setParameter("username", username);
 
         if (query.getResultList().size() == 0) {
-            return jb.generateResponse("error", "loginTeacher", "User does not exist");
+            return jb.genRes("error", "loginTeacher", "User does not exist");
         }
 
         SkiTeacher user = query.getResultList().get(0);
 
         if(user.getPassword() == null) {
-            return jb.generateResponse("error", "loginTeacher", "Password wurde noch nicht gesetzt");
+            return jb.genRes("error", "loginTeacher", "Password wurde noch nicht gesetzt");
         }
 
         try {
@@ -124,7 +124,7 @@ public class Repository {
             byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
 
             if (!new String(Hex.encode(hash)).equals(user.getPassword())) {
-                return jb.generateResponse("error", "loginTeacher", "Wrong Password");
+                return jb.genRes("error", "loginTeacher", "Wrong Password");
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -134,7 +134,7 @@ public class Repository {
 
         JSONArray token = new JSONArray(jwtToken);
 
-        return jb.generateDataResponse( "loginTeacher", token);
+        return jb.genDataRes( "loginTeacher", token);
     }
 
     public String addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -154,7 +154,7 @@ public class Repository {
         queryUniqueMail.setParameter("email", person.getEmail());
 
         if(queryUniqueMail.getSingleResult() != 0) {
-            return jb.generateResponse("error", "addSkiTeacher", "Email already exists");
+            return jb.genRes("error", "addSkiTeacher", "Email already exists");
         }
 
         executor.execute(() -> mailer.sendSetPasswordMail(token, person));
@@ -164,7 +164,7 @@ public class Repository {
         em.persist(token);
         em.getTransaction().commit();
 
-        return jb.generateResponse("ok", "addSkiTeacher", "SkiTeacher added");
+        return jb.genRes("ok", "addSkiTeacher", "SkiTeacher added");
     }
 
     public String setPassword4SkiTeacher(String token, String password) {
@@ -200,13 +200,13 @@ public class Repository {
         List<ContactPerson> result = query.getResultList();
 
         if (result.size() == 0) {
-            return jb.generateResponse("error", "loginContactPerson", "Person does not exist"); // Error
+            return jb.genRes("error", "loginContactPerson", "Person does not exist"); // Error
         }
 
         ContactPerson person = result.get(0);
 
         if(!person.isVerified()) {
-            return jb.generateResponse("error", "loginContactPerson", "Please confirm your email first");
+            return jb.genRes("error", "loginContactPerson", "Please confirm your email first");
         }
 
         try {
@@ -216,7 +216,7 @@ public class Repository {
             byte[] hash = md.digest(password.getBytes(StandardCharsets.UTF_8));
 
             if (!new String(Hex.encode(hash)).equals(person.getPassword())) {
-                return jb.generateResponse("error", "loginContactPerson", "Wrong Password");
+                return jb.genRes("error", "loginContactPerson", "Wrong Password");
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -226,7 +226,7 @@ public class Repository {
 
         JSONArray token = new JSONArray(jwtToken);
 
-        return jb.generateDataResponse( "loginContactPerson", token);
+        return jb.genDataRes( "loginContactPerson", token);
     }
 
     public String registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
@@ -248,7 +248,7 @@ public class Repository {
         long numberOfEntriesEmail = queryUniqueEmail.getSingleResult();
 
         if (numberOfEntriesEmail != 0) {
-            return jb.generateResponse("error", "registerContactPerson", "Email already exists");
+            return jb.genRes("error", "registerContactPerson", "Email already exists");
         }
 
         person.setToken(token);
@@ -259,7 +259,7 @@ public class Repository {
         em.persist(person);
         em.getTransaction().commit();
 
-        return jb.generateResponse("ok", "registerContactPerson", "Please confirm your email now");
+        return jb.genRes("ok", "registerContactPerson", "Please confirm your email now");
     }
 
     public String confirmMailContactPerson(String token) {
@@ -292,7 +292,7 @@ public class Repository {
         em.persist(course);
         em.getTransaction().commit();
 
-        return jb.generateResponse("ok", "assignCourse", "Course has been assigend successfully");
+        return jb.genRes("ok", "assignCourse", "Course has been assigend successfully");
     }
 
     public String addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -310,12 +310,12 @@ public class Repository {
         List<CourseGroup> groupList = query.getResultList();
 
         if(groupList.size() == 0) {
-            return jb.generateResponse("error", "getAllGroups","There are no Groups");
+            return jb.genRes("error", "getAllGroups","There are no Groups");
         }
 
         JSONArray groups = new JSONArray(groupList);
 
-        return jb.generateDataResponse("getAllGroups", groups);
+        return jb.genDataRes("getAllGroups", groups);
     }
 
     public String getAllCourseMembers(long courseId) {
@@ -325,7 +325,7 @@ public class Repository {
         List<Student> studentList = query.getResultList();
 
         if(studentList.size() == 0) {
-            return jb.generateResponse("error", "getAllCourseMembers", "There are no members");
+            return jb.genRes("error", "getAllCourseMembers", "There are no members");
         }
         return "";
     }
@@ -347,7 +347,7 @@ public class Repository {
         em.merge(person);
         em.getTransaction().commit();
 
-        return jb.generateResponse("ok", "registerChildren", "Child has been registerd");
+        return jb.genRes("ok", "registerChildren", "Child has been registerd");
     }
 
     public String getAllChildren() {
@@ -371,7 +371,7 @@ public class Repository {
         List<Student> studentList = queryStudent.getResultList();
 
         if(studentList.size() == 0) {
-            return jb.generateResponse("error", "addChildrenToCourse", "Student does not exist");
+            return jb.genRes("error", "addChildrenToCourse", "Student does not exist");
         }
 
         Student student = studentList.get(0);
@@ -382,7 +382,7 @@ public class Repository {
         List<Course> courseList = queryCourse.getResultList();
 
         if(courseList.size() == 0) {
-            return jb.generateResponse("error", "addChildrenToCourse", "Course error ka wos");
+            return jb.genRes("error", "addChildrenToCourse", "Course error ka wos");
         }
 
         Course course = courseList.get(0);

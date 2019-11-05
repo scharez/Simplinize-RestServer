@@ -5,6 +5,7 @@ import entity.Role;
 import repository.Repository;
 import utils.JsonBuilder;
 import utils.JwtHelper;
+import utils.ResponseBuilder;
 
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
@@ -23,6 +24,7 @@ import java.lang.reflect.Method;
 public class AuthFilter implements ContainerRequestFilter {
 
     private JsonBuilder jb = new JsonBuilder();
+    private ResponseBuilder rb = new ResponseBuilder();
     private JwtHelper jwt = new JwtHelper();
 
     private String token;
@@ -47,11 +49,11 @@ public class AuthFilter implements ContainerRequestFilter {
                 if (isUserInRole(jwt.getRoles(token), secure.value())) {
                     Repository.getInstance().saveHeader(token);
                 } else {
-                    Response res = validateRequest("You are not allowed", resourceMethod, Response.Status.FORBIDDEN);
+                    Response res = rb.genForbiddenRes(jb.genRes("error", resourceMethod.getName(), "You are not allowed"));
                     rc.abortWith(res);
                 }
             } catch (Exception ex) {
-                Response res = validateRequest("Auth-Token Error, Please login first!", resourceMethod, Response.Status.UNAUTHORIZED);
+                Response res = rb.genUnauthorizedRes(jb.genRes("error", resourceMethod.getName(), "Auth-Token Error, Please login first!"));
                 rc.abortWith(res);
             }
         }
@@ -65,17 +67,6 @@ public class AuthFilter implements ContainerRequestFilter {
             }
         }
         return false;
-    }
-
-    private Response validateRequest(String content, Method method, Response.Status status) {
-
-        String msg = jb.generateResponse("error", method.getName(), content);
-        CacheControl cc = new CacheControl();
-        cc.setNoStore(true);
-        return Response.status(status)
-                .cacheControl(cc)
-                .entity(msg)
-                .build();
     }
 }
 

@@ -3,13 +3,11 @@ package utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import javax.json.Json;
-
 public class JsonBuilder {
 
     public JsonBuilder() {}
 
-    public String generateResponse(String typ, String resource, String content) {
+    public String genRes(String typ, String resource, String content) {
 
         JSONObject json = new JSONObject();
 
@@ -23,7 +21,7 @@ public class JsonBuilder {
         return json.toString();
     }
 
-    public String generateDataResponse(String resource, JSONArray data) {
+    public String genDataRes(String resource, JSONArray data) {
 
         JSONObject json = new JSONObject();
 
@@ -35,7 +33,6 @@ public class JsonBuilder {
         System.out.println(ConsoleColor.green() + json.toString() + ConsoleColor.RESET);
 
         return json.toString();
-
     }
 
 }
