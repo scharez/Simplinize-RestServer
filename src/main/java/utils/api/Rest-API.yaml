@@ -3,7 +3,7 @@ info:
   title: Simplinize Rest-API
   description: API description in Markdown.
   version: 1.0.0
-host: api.example.com
+host: simplinize.scharez.at
 schemes:
   - https
 paths:

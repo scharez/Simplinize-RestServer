@@ -4,9 +4,11 @@ import javax.persistence.*;
 
 @Entity
 @NamedQueries({
+        @NamedQuery(name="CourseParticipation.getFromCouresId",
+                query="SELECT p FROM CourseParticipation p WHERE p.course.id = :courseId"),
 
 })
-public class Participation {
+public class CourseParticipation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
@@ -23,13 +25,14 @@ public class Participation {
     private boolean registration;
     private boolean deposit;
     private String rank;
+    private String proficiency;
     private double time;
     private double drivingCan;
     private boolean waiting;
 
-    public Participation() { }
+    public CourseParticipation() { }
 
-    public Participation(Student student, Person person, Course course, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
+    public CourseParticipation(Student student, Person person, Course course, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
         this.student = student;
         this.person = person;
         this.course = course;
@@ -119,5 +122,13 @@ public class Participation {
 
     public void setWaiting(boolean waiting) {
         this.waiting = waiting;
+    }
+
+    public String getProficiency() {
+        return proficiency;
+    }
+
+    public void setProficiency(String proficiency) {
+        this.proficiency = proficiency;
     }
 }

@@ -5,6 +5,7 @@ public class CourseGroupDTO {
     String proficiency;
     int amount;
 
+
     public CourseGroupDTO() {
 
     }

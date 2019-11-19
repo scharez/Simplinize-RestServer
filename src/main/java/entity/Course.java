@@ -8,7 +8,9 @@ import java.util.Date;
         @NamedQuery(name="Course.getCourse",
                 query="SELECT c FROM Course c"),
         @NamedQuery(name="Course.getCourseById",
-                query="SELECT c FROM Course c where c.id = :id")
+                query="SELECT c FROM Course c where c.id = :id"),
+        @NamedQuery(name="Course.getCurrentCourse",
+                query="")
 })
 public class Course {
     @GeneratedValue(strategy = GenerationType.AUTO)
