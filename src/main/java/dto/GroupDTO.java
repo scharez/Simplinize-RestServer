@@ -1,16 +1,16 @@
 package dto;
 
-public class CourseGroupDTO {
+public class GroupDTO {
 
     String proficiency;
     int amount;
 
 
-    public CourseGroupDTO() {
+    public GroupDTO() {
 
     }
 
-    public CourseGroupDTO(String proficiency, int amount) {
+    public GroupDTO(String proficiency, int amount) {
         this.proficiency = proficiency;
         this.amount = amount;
     }

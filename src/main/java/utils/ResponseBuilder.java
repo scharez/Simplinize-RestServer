@@ -30,7 +30,7 @@ public class ResponseBuilder {
         CacheControl cc = new CacheControl();
         cc.setNoStore(true);
 
-        return Response.status((Response.StatusType) Response.status(status))
+        return Response.status(status)
                 .cacheControl(cc)
                 .entity(msg)
                 .build();

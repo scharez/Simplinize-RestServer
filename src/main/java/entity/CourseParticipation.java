@@ -14,33 +14,28 @@ public class CourseParticipation {
     private long id;
 
     @ManyToOne
-    Student student;
+    private Student student;
 
     @ManyToOne // Das ist die einzahlende Person, kann SkiTeacher oder ContactPerson sein
-    Person person;
+    private Person person;
 
     @ManyToOne
-    Course course;
+    private Course course;
 
-    private boolean registration;
+    //Bezahlt oder nicht
     private boolean deposit;
-    private String rank;
-    private String proficiency;
-    private double time;
-    private double drivingCan;
+
+    private String drivingCanFromRegistration;
     private boolean waiting;
 
     public CourseParticipation() { }
 
-    public CourseParticipation(Student student, Person person, Course course, boolean registration, boolean deposit, String rank, double time, double drivingCan, boolean waiting) {
+    public CourseParticipation(Student student, Person person, Course course, boolean deposit, String drivingCanFromRegistration, boolean waiting) {
         this.student = student;
         this.person = person;
         this.course = course;
-        this.registration = registration;
         this.deposit = deposit;
-        this.rank = rank;
-        this.time = time;
-        this.drivingCan = drivingCan;
+        this.drivingCanFromRegistration = drivingCanFromRegistration;
         this.waiting = waiting;
     }
 
@@ -76,14 +71,6 @@ public class CourseParticipation {
         this.course = course;
     }
 
-    public boolean isRegistration() {
-        return registration;
-    }
-
-    public void setRegistration(boolean registration) {
-        this.registration = registration;
-    }
-
     public boolean isDeposit() {
         return deposit;
     }
@@ -92,28 +79,12 @@ public class CourseParticipation {
         this.deposit = deposit;
     }
 
-    public String getRank() {
-        return rank;
+    public String getdrivingCanFromRegistration() {
+        return drivingCanFromRegistration;
     }
 
-    public void setRank(String rank) {
-        this.rank = rank;
-    }
-
-    public double getTime() {
-        return time;
-    }
-
-    public void setTime(double time) {
-        this.time = time;
-    }
-
-    public double getDrivingCan() {
-        return drivingCan;
-    }
-
-    public void setDrivingCan(double drivingCan) {
-        this.drivingCan = drivingCan;
+    public void setdrivingCanFromRegistration(String drivingCanFromRegistration) {
+        this.drivingCanFromRegistration = drivingCanFromRegistration;
     }
 
     public boolean isWaiting() {
@@ -124,11 +95,4 @@ public class CourseParticipation {
         this.waiting = waiting;
     }
 
-    public String getProficiency() {
-        return proficiency;
-    }
-
-    public void setProficiency(String proficiency) {
-        this.proficiency = proficiency;
-    }
 }

@@ -2,7 +2,7 @@ package service;
 
 import annotation.Secure;
 import dto.CourseDTO;
-import dto.CourseGroupDTO;
+import dto.GroupDTO;
 import dto.StudentDTO;
 import entity.Role;
 import repository.Repository;
@@ -120,7 +120,7 @@ public class AppService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createGroup(CourseGroupDTO g) {
+    public String createGroup(GroupDTO g) {
 
         return Repository.getInstance().createGroup(g.getProficiency(), g.getAmount());
     }

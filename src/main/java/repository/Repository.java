@@ -133,12 +133,7 @@ public class Repository {
 
         String jwtToken = jwt.create(user.getEmail(), user.getRoles().toArray());
 
-        JSONObject tokenObj = new JSONObject();
-        tokenObj.put("token", jwtToken);
-
-        JSONArray token = new JSONArray(tokenObj);
-
-        return jb.genDataRes( "loginTeacher", token);
+        return jb.genDataRes( "loginTeacher", new JSONArray(jwtToken));
     }
 
     public String addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -229,12 +224,7 @@ public class Repository {
 
         String jwtToken = jwt.create(person.getEmail(), new Role[]{person.getRole()});
 
-        JSONObject tokenObj = new JSONObject();
-        tokenObj.put("token", jwtToken);
-
-        JSONArray token = new JSONArray(tokenObj);
-
-        return jb.genDataRes( "loginContactPerson", token);
+        return jb.genDataRes( "loginContactPerson", new JSONArray(jwtToken));
     }
 
     public String registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
@@ -305,9 +295,9 @@ public class Repository {
 
     public String addTeacherToGroup(long groupId, long skiTeacherId) {
 
-        CourseGroup courseGroup = getCourseGroupById(groupId);
+        Group group = getGroupById(groupId);
 
-        if(courseGroup == null) {
+        if(group == null) {
             return jb.genRes("error", "addTeacherToGroup", "CourseCroup error");
         }
 
@@ -317,10 +307,10 @@ public class Repository {
             return jb.genRes("error", "addTeacherToGroup", "SkiTeacher error");
         }
 
-        courseGroup.setSkiTeacher(skiTeacher);
+        group.setSkiTeacher(skiTeacher);
 
         em.getTransaction().begin();
-        em.merge(courseGroup);
+        em.merge(group);
         em.getTransaction().commit();
 
 
@@ -329,10 +319,10 @@ public class Repository {
 
     public String getAllGroups(long courseId) {
 
-        TypedQuery<CourseGroup> query = em.createNamedQuery("CourseGroup.getCourseGroups", CourseGroup.class);
+        TypedQuery<Group> query = em.createNamedQuery("Group.getGroupsByCourseID", Group.class);
         query.setParameter("id", courseId);
 
-        List<CourseGroup> groupList = query.getResultList();
+        List<Group> groupList = query.getResultList();
 
         if(groupList.size() == 0) {
             return jb.genRes("error", "getAllGroups","There are no Groups");
@@ -469,8 +459,8 @@ public class Repository {
         return em.find(Course.class, id);
     }
 
-    private CourseGroup getCourseGroupById(long id) {
-        return em.find(CourseGroup.class, id);
+    private Group getGroupById(long id) {
+        return em.find(Group.class, id);
     }
 
     private SkiTeacher getSkiTeacherById(long id) {
@@ -482,15 +472,27 @@ public class Repository {
         SkiTeacher skiTeacher = getSkiTeacher();
         Course course = getCurrentCourse();
 
-        CourseGroup courseGroup = new CourseGroup();
+        Group group = new Group();
 
         return "";
     }
 
     public String getGroupMembers(long groupId) {
 
+        TypedQuery<GroupParticipation> query = em.createNamedQuery("GroupParticipation.getPartByGroupId", GroupParticipation.class);
+        query.setParameter("id", groupId);
 
-        return "";
+        List<GroupParticipation> groupParticipations = query.getResultList();
+
+        if(groupParticipations.isEmpty()) {
+            return jb.genRes("error", "getGroupMembers", "No Members in this group");
+        }
+
+        List<Student> studentList = new ArrayList<>();
+
+        groupParticipations.forEach(groupParticipation -> studentList.add(groupParticipation.getStudent()));
+
+        return jb.genDataRes("getGroupMembers", new JSONArray(studentList));
     }
 
     public String getCourseParticipants(String proficiency) {

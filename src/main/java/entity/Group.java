@@ -4,15 +4,17 @@ import javax.persistence.*;
 
 @Entity
 @NamedQueries({
-        @NamedQuery(name="CourseGroup.getAllGroups",
-                query="SELECT g FROM CourseGroup g"),
-        @NamedQuery(name="CourseGroup.getCourseGroups",
-                query="SELECT g FROM CourseGroup g WHERE g.course.id = :id"),
+        @NamedQuery(name="Group.getAllGroups",
+                query="SELECT g FROM Group g"),
+        @NamedQuery(name="Group.getGroupsByCourseID",
+                query="SELECT g FROM Group g WHERE g.course.id = :id"),
 })
-public class CourseGroup {
+public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Id
     private long id;
+
+    private int participants;
 
     @ManyToOne
     private Course course;
@@ -23,12 +25,13 @@ public class CourseGroup {
     @Enumerated(EnumType.STRING)
     private Proficiency proficiency;
 
-    public CourseGroup() {}
+    public Group() {}
 
-    public CourseGroup(Course course, SkiTeacher skiTeacher, Proficiency proficiency) {
+    public Group(Course course, SkiTeacher skiTeacher, Proficiency proficiency, int participants) {
         this.course = course;
         this.skiTeacher = skiTeacher;
         this.proficiency = proficiency;
+        this.participants = participants;
     }
 
     public long getId() {
@@ -61,5 +64,13 @@ public class CourseGroup {
 
     public void setProficiency(Proficiency proficiency) {
         this.proficiency = proficiency;
+    }
+
+    public int getParticipants() {
+        return participants;
+    }
+
+    public void setParticipants(int participants) {
+        this.participants = participants;
     }
 }
