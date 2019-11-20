@@ -111,7 +111,7 @@ public class AppService {
     @Produces(MediaType.APPLICATION_JSON)
     public String createGroup(GroupDTO g) {
 
-        return Repository.getInstance().createGroup(g.getProficiency(), g.getAmount());
+        return Repository.getInstance().createGroup(g.getProficiency(), g.getParticipants(), g.getAmount());
     }
 
     @Secure(Role.ADMIN)

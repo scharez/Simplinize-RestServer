@@ -463,15 +463,19 @@ public class Repository {
         return em.find(SkiTeacher.class, id);
     }
 
-    public String createGroup(String proficiency, int amount) {
+    public String createGroup(String proficiency, int participants, int amount) {
 
-        SkiTeacher skiTeacher = getSkiTeacher();
+        Group group = new Group(Proficiency.valueOf(proficiency), participants, amount);
+
         Course course = getCurrentCourse();
 
-        Group group = new Group();
+        if(course == null) {
+            return jb.genRes("hint","createGroup", "Error");
+        }
 
+        group.setCourse(course);
 
-        return "";
+        return jb.genRes("ok","createGroup", "Successfully created Group");
     }
 
     public String getGroupMembers(long groupId) {

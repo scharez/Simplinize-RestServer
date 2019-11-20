@@ -17,6 +17,7 @@ public class Group {
     private long id;
 
     private int participants;
+    private int amount;
 
     @ManyToOne
     private Course course;
@@ -29,11 +30,16 @@ public class Group {
 
     public Group() {}
 
-    public Group(Course course, SkiTeacher skiTeacher, Proficiency proficiency, int participants) {
+    public Group(Course course, Proficiency proficiency, int participants) {
         this.course = course;
-        this.skiTeacher = skiTeacher;
         this.proficiency = proficiency;
         this.participants = participants;
+    }
+
+    public Group(Proficiency proficiency, int participants, int amount) {
+        this.proficiency = proficiency;
+        this.participants = participants;
+        this.amount = amount;
     }
 
     public long getId() {
@@ -74,5 +80,13 @@ public class Group {
 
     public void setParticipants(int participants) {
         this.participants = participants;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }
