@@ -5,13 +5,11 @@ import org.json.JSONObject;
 
 public class JsonBuilder {
 
-    public JsonBuilder() {}
-
     public String genRes(String typ, String resource, String content) {
 
         JSONObject json = new JSONObject();
 
-        json.put("typ", typ)
+        json.put("typ", typ) // Kann ok oder hint sein
                 .put("resource", resource)
                 .put("content", content);
 
@@ -25,8 +23,7 @@ public class JsonBuilder {
 
         JSONObject json = new JSONObject();
 
-        json.put("typ", "data")
-                .put("resource", resource)
+        json.put("resource", resource)
                 .put("data", data);
 
         System.out.println();

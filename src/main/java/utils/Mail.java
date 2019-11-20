@@ -41,7 +41,7 @@ public class Mail {
      * @param token
      * @param user
      */
-    public void sendSetPasswordMail(Token token, SkiTeacher user) {
+    public String sendSetPasswordMail(Token token, SkiTeacher user) {
 
         Message message = new MimeMessage(session);
 
@@ -72,9 +72,11 @@ public class Mail {
             e.printStackTrace();
         }
 
+        return "";
+
     }
 
-    public void sendConfirmation(Token token, ContactPerson person) {
+    public String sendConfirmation(Token token, ContactPerson person) {
 
         Message message = new MimeMessage(session);
 
@@ -101,5 +103,7 @@ public class Mail {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
+
+        return "";
     }
 }

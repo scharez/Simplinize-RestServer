@@ -25,6 +25,8 @@ public class Course {
     @ManyToOne
     private SkiTeacher instructor;
 
+    private boolean finished;
+
     public Course () {}
 
     public Course(Date from, Date to, String place, SkiTeacher instructor) {
@@ -72,5 +74,13 @@ public class Course {
 
     public void setInstructor(SkiTeacher instructor) {
         this.instructor = instructor;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

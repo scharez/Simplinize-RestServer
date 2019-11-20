@@ -13,17 +13,6 @@ import javax.ws.rs.core.MediaType;
 @Path("app")
 public class AppService {
 
-    @Secure(Role.ADMIN)
-    @Path("init")
-    @GET
-    @Produces({MediaType.TEXT_HTML})
-    public String inti() {
-
-        Repository.getInstance().init();
-
-        return "DB wurde initialisiert";
-    }
-
     /**
      * Register a Child
      *
@@ -198,6 +187,16 @@ public class AppService {
     public String getCourseParticipants(@QueryParam("proficiency") String proficiency) {
 
         return Repository.getInstance().getCourseParticipants(proficiency);
+    }
+
+    @Secure(Role.SKITEAM)
+    @Path("addChildrenToGroup")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public String addChildrenToGroup(@QueryParam("studentId") long studentId, @QueryParam("groupId") long groupId) {
+
+        return Repository.getInstance().addChildrenToGroup(studentId, groupId);
     }
 
 }

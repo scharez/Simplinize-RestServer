@@ -43,6 +43,7 @@ public class AuthFilter implements ContainerRequestFilter {
 
         if(resourceMethod.isAnnotationPresent(Secure.class)) {
             try {
+
                 token = authorizationHeader.substring("Bearer".length()).trim();
                 jwt.checkSubject(token);
 

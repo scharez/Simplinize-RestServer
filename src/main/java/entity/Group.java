@@ -6,6 +6,8 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name="Group.getAllGroups",
                 query="SELECT g FROM Group g"),
+        @NamedQuery(name="Group.getGroupById",
+                query="SELECT g FROM Group g where g.id = :id"),
         @NamedQuery(name="Group.getGroupsByCourseID",
                 query="SELECT g FROM Group g WHERE g.course.id = :id"),
 })

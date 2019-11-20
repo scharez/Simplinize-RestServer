@@ -35,6 +35,10 @@ public class GroupParticipation {
         this.drivingCan = drivingCan;
     }
 
+    public GroupParticipation(Group group, Student student) {
+
+    }
+
     public long getId() {
         return id;
     }

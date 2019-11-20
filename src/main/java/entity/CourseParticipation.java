@@ -6,6 +6,8 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name="CourseParticipation.getFromCouresId",
                 query="SELECT p FROM CourseParticipation p WHERE p.course.id = :courseId"),
+        @NamedQuery(name="CP.getFromCourseAndProficiency",
+                query="SELECT p FROM CourseParticipation p WHERE p.course.id = :courseId and p.proficiency = :proficiency"),
 
 })
 public class CourseParticipation {
@@ -26,7 +28,9 @@ public class CourseParticipation {
     private boolean deposit;
 
     private String drivingCanFromRegistration;
+    private Proficiency proficiency;
     private boolean waiting;
+    private boolean wasIll;
 
     public CourseParticipation() { }
 
@@ -79,14 +83,6 @@ public class CourseParticipation {
         this.deposit = deposit;
     }
 
-    public String getdrivingCanFromRegistration() {
-        return drivingCanFromRegistration;
-    }
-
-    public void setdrivingCanFromRegistration(String drivingCanFromRegistration) {
-        this.drivingCanFromRegistration = drivingCanFromRegistration;
-    }
-
     public boolean isWaiting() {
         return waiting;
     }
@@ -95,4 +91,27 @@ public class CourseParticipation {
         this.waiting = waiting;
     }
 
+    public String getDrivingCanFromRegistration() {
+        return drivingCanFromRegistration;
+    }
+
+    public void setDrivingCanFromRegistration(String drivingCanFromRegistration) {
+        this.drivingCanFromRegistration = drivingCanFromRegistration;
+    }
+
+    public Proficiency getProficiency() {
+        return proficiency;
+    }
+
+    public void setProficiency(Proficiency proficiency) {
+        this.proficiency = proficiency;
+    }
+
+    public boolean wasIll() {
+        return wasIll;
+    }
+
+    public void setWasIll(boolean wasIll) {
+        this.wasIll = wasIll;
+    }
 }
