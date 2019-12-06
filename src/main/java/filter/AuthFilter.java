@@ -50,7 +50,7 @@ public class AuthFilter implements ContainerRequestFilter {
                 if (isUserInRole(jwt.getRoles(token), secure.value())) {
                     Repository.getInstance().saveHeader(token);
                 } else {
-                    Response res = rb.genForbiddenRes(jb.genRes("error", resourceMethod.getName(), "You are not allowed"));
+                    Response res = rb.genForbiddenRes(jb.genRes("hint", resourceMethod.getName(), "You are not allowed"));
                     rc.abortWith(res);
                 }
             } catch (Exception ex) {
@@ -64,7 +64,8 @@ public class AuthFilter implements ContainerRequestFilter {
 
         for(Role role: roles) {
             for(Role userRole: userRoles) {
-                if(role.equals(userRole)) /*|| role.equals(Role.EVERYONE))*/ return true;
+                if(role.equals(userRole))
+                    return true;
             }
         }
         return false;

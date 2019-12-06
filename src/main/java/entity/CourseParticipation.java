@@ -30,7 +30,8 @@ public class CourseParticipation {
     private String drivingCanFromRegistration;
     private Proficiency proficiency;
     private boolean waiting;
-    private boolean wasIll;
+
+    private boolean tookPart;
 
     public CourseParticipation() { }
 
@@ -107,11 +108,11 @@ public class CourseParticipation {
         this.proficiency = proficiency;
     }
 
-    public boolean wasIll() {
-        return wasIll;
+    public boolean isTookPart() {
+        return tookPart;
     }
 
-    public void setWasIll(boolean wasIll) {
-        this.wasIll = wasIll;
+    public void setTookPart(boolean tookPart) {
+        this.tookPart = tookPart;
     }
 }

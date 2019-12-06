@@ -5,13 +5,13 @@ import org.json.JSONObject;
 
 public class JsonBuilder {
 
-    public String genRes(String typ, String resource, String content) {
+    public String genRes(String typ, String resource, String message) {
 
         JSONObject json = new JSONObject();
 
-        json.put("typ", typ) // Kann ok oder hint sein
+        json.put("typ", typ) // can be HINT or OK
                 .put("resource", resource)
-                .put("content", content);
+                .put("message", message);
 
         System.out.println();
         System.out.println(ConsoleColor.BLUE + json.toString() + ConsoleColor.RESET);

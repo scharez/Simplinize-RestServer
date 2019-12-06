@@ -9,9 +9,20 @@ import repository.Repository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("app")
 public class AppService {
+
+
+    @Path("test")
+    @GET
+    public Response test() {
+
+        return Response.status(Response.Status.UNAUTHORIZED)
+                .entity("SEAS OIDA")
+                .build();
+    }
 
     /**
      * Register a Child
@@ -25,7 +36,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String registerChildren(StudentDTO s) {
+    public Response registerChildren(StudentDTO s) {
 
         return Repository.getInstance().registerChildren(s.getFirstName(), s.getLastName(), s.getBirthday(), s.getPostCode(),
                 s.getPlace(),s.getHouseNumber(), s.getStreet());
@@ -44,7 +55,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String addChildrenToCourse(@QueryParam("studentId") long studentId, @QueryParam("courseId") long courseId) {
+    public Response addChildrenToCourse(@QueryParam("studentId") long studentId, @QueryParam("courseId") long courseId) {
 
         return Repository.getInstance().addChildrenToCourse(studentId, courseId);
     }
@@ -60,7 +71,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getAllChildren() {
+    public Response getAllChildren() {
 
         return Repository.getInstance().getAllChildren();
     }
@@ -76,7 +87,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getChildren(@QueryParam("studentId") long studentId) {
+    public Response getChildren(@QueryParam("studentId") long studentId) {
 
         return Repository.getInstance().getChildren(studentId);
     }
@@ -97,7 +108,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String assignCourse(CourseDTO course) {
+    public Response assignCourse(CourseDTO course) {
 
         return Repository.getInstance().assignCourse(course.getFrom(), course.getTo(), course.getPlace(), course.getInstructor());
     }
@@ -109,7 +120,7 @@ public class AppService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public String createGroup(GroupDTO g) {
+    public Response createGroup(GroupDTO g) {
 
         return Repository.getInstance().createGroup(g.getProficiency(), g.getParticipants(), g.getAmount());
     }
@@ -119,7 +130,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String addTeacherToGroup(@QueryParam("skiTeacherId") long skiTeacherId, @QueryParam("groupId") long groupId) {
+    public Response addTeacherToGroup(@QueryParam("skiTeacherId") long skiTeacherId, @QueryParam("groupId") long groupId) {
 
         return Repository.getInstance().addTeacherToGroup(groupId, skiTeacherId);
     }
@@ -129,7 +140,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getAllGroups(@QueryParam("courseId") long courseId) {
+    public Response getAllGroups(@QueryParam("courseId") long courseId) {
 
         return Repository.getInstance().getAllGroups(courseId);
     }
@@ -139,7 +150,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getAllCourseMembers(@QueryParam("courseId") long courseId) {
+    public Response getAllCourseMembers(@QueryParam("courseId") long courseId) {
 
         return Repository.getInstance().getAllCourseMembers(courseId);
     }
@@ -149,7 +160,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getSkiTeachers() {
+    public Response getSkiTeachers() {
 
         return Repository.getInstance().getSkiTeachers();
     }
@@ -163,7 +174,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getGroupMembers(@QueryParam("groupId") long groupId) {
+    public Response getGroupMembers(@QueryParam("groupId") long groupId) {
 
         return Repository.getInstance().getGroupMembers(groupId);
     }
@@ -174,9 +185,9 @@ public class AppService {
     @Path("getGroup")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getGroup(@QueryParam("groupId") long groupId) {
+    public Response getGroup(@QueryParam("groupId") long groupId) {
 
-        return "";
+        return null;
     }
 
     @Secure(Role.SKITEAM)
@@ -184,7 +195,7 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public String getCourseParticipants(@QueryParam("proficiency") String proficiency) {
+    public Response getCourseParticipants(@QueryParam("proficiency") String proficiency) {
 
         return Repository.getInstance().getCourseParticipants(proficiency);
     }
@@ -194,7 +205,7 @@ public class AppService {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
-    public String addChildrenToGroup(@QueryParam("studentId") long studentId, @QueryParam("groupId") long groupId) {
+    public Response addChildrenToGroup(@QueryParam("studentId") long studentId, @QueryParam("groupId") long groupId) {
 
         return Repository.getInstance().addChildrenToGroup(studentId, groupId);
     }

@@ -41,12 +41,13 @@ public class Mail {
      * @param token
      * @param user
      */
-    public String sendSetPasswordMail(Token token, SkiTeacher user) {
+    public void sendSetPasswordMail(Token token, SkiTeacher user) {
 
         Message message = new MimeMessage(session);
 
         try {
             message.setFrom(new InternetAddress(pl.prop.getProperty("mail.user")));
+
             message.setRecipients(
                     Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
             message.setSubject("Set your simplinize password");
@@ -71,12 +72,9 @@ public class Mail {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-        return "";
-
     }
 
-    public String sendConfirmation(Token token, ContactPerson person) {
+    public void sendConfirmation(Token token, ContactPerson person) {
 
         Message message = new MimeMessage(session);
 
@@ -103,7 +101,5 @@ public class Mail {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-        return "";
     }
 }

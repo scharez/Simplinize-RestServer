@@ -7,6 +7,7 @@ import repository.Repository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("auth")
 public class AuthService {
@@ -22,7 +23,7 @@ public class AuthService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String login(LoginDTO login) {
+    public Response login(LoginDTO login) {
 
         return Repository.getInstance().login(login);
     }
@@ -38,7 +39,7 @@ public class AuthService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String addSkiTeacher(SkiTeacherDTO st) {
+    public Response addSkiTeacher(SkiTeacherDTO st) {
         return Repository.getInstance().addSkiTeacher(st.getFirstName(), st.getLastName(), st.getEmail(), st.getRoles());
     }
 
@@ -70,7 +71,7 @@ public class AuthService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    public String registerContactPerson(ContactPersonDTO register) {
+    public Response registerContactPerson(ContactPersonDTO register) {
 
         return Repository.getInstance().registerContactPerson(register.getFirstName(), register.getLastName(), register.getEmail(), register.getPassword(), register.getPhoneNumber());
     }
