@@ -18,6 +18,7 @@ public class JwtHelper {
 
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, pl.prop.getProperty("jwt.key"))
+                .setIssuer("https://api.scharez.at/simplinize")
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))
@@ -46,8 +47,6 @@ public class JwtHelper {
                 .getBody()
                 .get("role", String.class);
 
-        Role [] fromToken = {Role.valueOf(roles)};
-
-        return fromToken;
+        return new Role[]{Role.valueOf(roles)};
     }
 }

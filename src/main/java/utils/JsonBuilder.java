@@ -23,7 +23,8 @@ public class JsonBuilder {
 
         JSONObject json = new JSONObject();
 
-        json.put("resource", resource)
+        json.put("typ", "data")
+                .put("resource", resource)
                 .put("data", data);
 
         System.out.println();

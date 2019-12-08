@@ -4,6 +4,7 @@ import dto.LoginDTO;
 import entity.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import utils.JsonBuilder;
 import utils.JwtHelper;
 import utils.Mail;
@@ -135,7 +136,12 @@ public class Repository {
 
         String jwtToken = jwt.create(user.getEmail(), user.getRoles().toArray());
 
-        return rb.genRes(jb.genDataRes( "loginTeacher", new JSONArray(jwtToken)));
+        JSONObject data = new JSONObject();
+        data.put("id", user.getId())
+                .put("credentials", user.getUsername())
+                .put("token", jwtToken);
+
+        return rb.genRes(jb.genDataRes( "loginTeacher", new JSONArray().put(data)));
     }
 
     public Response addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -226,7 +232,12 @@ public class Repository {
 
         String jwtToken = jwt.create(person.getEmail(), new Role[]{person.getRole()});
 
-        return rb.genRes(jb.genDataRes( "loginContactPerson", new JSONArray(jwtToken)));
+        JSONObject data = new JSONObject();
+        data.put("id", person.getId())
+                .put("credentials", person.getEmail())
+                .put("token", jwtToken);
+
+        return rb.genRes(jb.genDataRes( "loginContactPerson", new JSONArray().put(data)));
     }
 
     public Response registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
