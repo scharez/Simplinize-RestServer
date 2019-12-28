@@ -39,7 +39,9 @@ public class SkiTeacher extends Person {
         this.joined = new Date();
     }
 
-    public SkiTeacher() {}
+    public SkiTeacher() {
+        this.joined = new Date();
+    }
 
     public String getUsername() {
         return username;

@@ -61,9 +61,9 @@ public class AppService {
     }
 
     /**
-     * Get all Children of Contactperson
+     * Get all Children
      *
-     * @return a json which can contain an error or a successfully login message
+     * @return
      */
 
     @Secure(Role.CONTACTPERSON)
@@ -79,7 +79,7 @@ public class AppService {
     /**
      * Get Children of Contactperson
      *
-     * @return a json which can contain an error or a successfully login message
+     * @return
      */
 
     @Secure(Role.CONTACTPERSON)

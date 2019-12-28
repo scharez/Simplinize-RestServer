@@ -99,7 +99,7 @@ public class Repository {
                 return loginContactPerson(login.getCredentials(), login.getPassword());
 
             case SKITEACHER:
-                    return loginTeacher(login.getCredentials(), login.getPassword());
+                return loginTeacher(login.getCredentials(), login.getPassword());
 
             default:
                 return rb.genErrorRes(jb.genRes("error", "login", "Something went wrong"));
@@ -117,7 +117,7 @@ public class Repository {
 
         SkiTeacher user = query.getResultList().get(0);
 
-        if(user.getPassword() == null) {
+        if (user.getPassword() == null) {
             return rb.genRes(jb.genRes("hint", "loginTeacher", "Password wurde noch nicht gesetzt"));
         }
 
@@ -141,7 +141,7 @@ public class Repository {
                 .put("credentials", user.getUsername())
                 .put("token", jwtToken);
 
-        return rb.genRes(jb.genDataRes( "loginTeacher", new JSONArray().put(data)));
+        return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray().put(data)));
     }
 
     public Response addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -160,7 +160,7 @@ public class Repository {
         TypedQuery<Long> queryUniqueMail = em.createNamedQuery("Person.uniqueEmail", Long.class);
         queryUniqueMail.setParameter("email", person.getEmail());
 
-        if(queryUniqueMail.getSingleResult() != 0) {
+        if (queryUniqueMail.getSingleResult() != 0) {
             return rb.genRes(jb.genRes("hint", "addSkiTeacher", "Email already exists"));
         }
 
@@ -181,7 +181,7 @@ public class Repository {
 
         List<Token> tokenList = queryToken.getResultList();
 
-        if(tokenList.size() == 0) {
+        if (tokenList.size() == 0) {
             //Error
             System.out.println("Error");
             return "Error";
@@ -213,7 +213,7 @@ public class Repository {
 
         ContactPerson person = result.get(0);
 
-        if(!person.isVerified()) {
+        if (!person.isVerified()) {
             return rb.genRes(jb.genRes("hint", "loginContactPerson", "Please confirm your email first"));
         }
 
@@ -237,7 +237,7 @@ public class Repository {
                 .put("credentials", person.getEmail())
                 .put("token", jwtToken);
 
-        return rb.genRes(jb.genDataRes( "loginContactPerson", new JSONArray().put(data)));
+        return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray().put(data)));
     }
 
     public Response registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
@@ -310,13 +310,13 @@ public class Repository {
 
         Group group = getGroupById(groupId);
 
-        if(group == null) {
+        if (group == null) {
             return rb.genRes(jb.genRes("hint", "addTeacherToGroup", "This Group does not exist"));
         }
 
         SkiTeacher skiTeacher = getSkiTeacherById(skiTeacherId);
 
-        if(skiTeacher == null) {
+        if (skiTeacher == null) {
             return rb.genRes(jb.genRes("hint", "addTeacherToGroup", "This SkiTeacher does not exist"));
         }
 
@@ -337,8 +337,8 @@ public class Repository {
 
         List<Group> groupList = query.getResultList();
 
-        if(groupList.size() == 0) {
-            return rb.genRes(jb.genRes("hint", "getAllGroups","There are no Groups"));
+        if (groupList.size() == 0) {
+            return rb.genRes(jb.genRes("hint", "getAllGroups", "There are no Groups"));
         }
 
         JSONArray groups = new JSONArray(groupList);
@@ -352,7 +352,7 @@ public class Repository {
 
         List<Student> studentList = query.getResultList();
 
-        if(studentList.size() == 0) {
+        if (studentList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "getAllCourseMembers", "There are no members"));
         }
 
@@ -361,7 +361,7 @@ public class Repository {
 
         List<CourseParticipation> courseParticipationList = participationQuery.getResultList();
 
-        if(courseParticipationList.size() == 0) {
+        if (courseParticipationList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "getAllCourseMembers", "No Teilnahmen lol"));
         }
 
@@ -400,7 +400,7 @@ public class Repository {
 
         List<Student> studentList = query.getResultList();
 
-        if(studentList.size() == 0) {
+        if (studentList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "getAllChildren", "There are no members"));
         }
 
@@ -414,7 +414,7 @@ public class Repository {
 
         List<Student> studentList = query.getResultList();
 
-        if(studentList.size() == 0) {
+        if (studentList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "getChildren", "Does not exist"));
         }
 
@@ -428,7 +428,7 @@ public class Repository {
 
         List<Student> studentList = queryStudent.getResultList();
 
-        if(studentList.size() == 0) {
+        if (studentList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "addChildrenToCourse", "Student does not exist"));
         }
 
@@ -439,7 +439,7 @@ public class Repository {
 
         List<Course> courseList = queryCourse.getResultList();
 
-        if(courseList.size() == 0) {
+        if (courseList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "addChildrenToCourse", "Course error ka wos"));
         }
 
@@ -481,14 +481,20 @@ public class Repository {
 
         Course course = getCurrentCourse();
 
-        if(course == null) {
-            return rb.genRes(jb.genRes("hint","createGroup", "Error"));
+        if (course == null) {
+            return rb.genRes(jb.genRes("hint", "createGroup", "Error"));
         }
 
         group.setCourse(course);
 
-        return rb.genRes(jb.genRes("ok","createGroup", "Successfully created Group"));
+        return rb.genRes(jb.genRes("ok", "createGroup", "Successfully created Group"));
     }
+
+    /**
+     * Gibt alle Gruppenmitglieder einer Gruppe zurück
+     * @param groupId
+     * @return
+     */
 
     public Response getGroupMembers(long groupId) {
 
@@ -497,7 +503,7 @@ public class Repository {
 
         List<GroupParticipation> groupParticipations = query.getResultList();
 
-        if(groupParticipations.isEmpty()) {
+        if (groupParticipations.isEmpty()) {
             return rb.genRes(jb.genRes("hint", "getGroupMembers", "No Members in this group"));
         }
 
@@ -512,7 +518,7 @@ public class Repository {
 
         Course course = getCurrentCourse();
 
-        if(course == null) {
+        if (course == null) {
             return rb.genRes(jb.genRes("hint", "getCourseParticipants", "There is actuell no Course"));
         }
 
@@ -522,7 +528,7 @@ public class Repository {
 
         List<CourseParticipation> list = query.getResultList();
 
-        if(list.size() == 0) {
+        if (list.size() == 0) {
             return rb.genRes(jb.genRes("hint", "getCourseParticipants", "There are no CourseParticipants with this proficiency"));
         }
 
@@ -538,14 +544,14 @@ public class Repository {
         TypedQuery<Student> studentQuery = em.createNamedQuery("Student.getStudentById", Student.class);
         studentQuery.setParameter("id", studentId);
 
-        if(studentQuery.getResultList().size() == 0) {
+        if (studentQuery.getResultList().size() == 0) {
             return rb.genRes(jb.genRes("error", "addChildrenToGroup", "This Student does not exist"));
         }
 
         TypedQuery<Group> groupQuery = em.createNamedQuery("Group.getGroupById", Group.class);
         groupQuery.setParameter("id", groupId);
 
-        if(groupQuery.getResultList().size() == 0) {
+        if (groupQuery.getResultList().size() == 0) {
             return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "This Group does not exist"));
         }
 
@@ -564,7 +570,7 @@ public class Repository {
 
         List<SkiTeacher> skiTeacherList = query.getResultList();
 
-        if(skiTeacherList.size() == 0) {
+        if (skiTeacherList.size() == 0) {
             return rb.genRes(jb.genRes("hint", "getSkiTeachers", "There are no SkiTeachers"));
         }
 

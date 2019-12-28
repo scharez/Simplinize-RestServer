@@ -11,6 +11,7 @@ import java.util.Date;
 public class JwtHelper {
 
     private final long ACCESS_TOKEN_VALIDITY_SECONDS = 10_0000;
+    private final String URL = "https://api.scharez.at/simplinize";
 
     private PropertyLoader pl = new PropertyLoader();
 
@@ -18,7 +19,7 @@ public class JwtHelper {
 
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, pl.prop.getProperty("jwt.key"))
-                .setIssuer("https://api.scharez.at/simplinize")
+                .setIssuer(URL)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY_SECONDS * 1000))

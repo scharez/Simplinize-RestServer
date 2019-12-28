@@ -41,7 +41,7 @@ public class AuthFilter implements ContainerRequestFilter {
 
         Secure secure = resourceMethod.getAnnotation(Secure.class);
 
-        if(resourceMethod.isAnnotationPresent(Secure.class)) {
+        if (resourceMethod.isAnnotationPresent(Secure.class)) {
             try {
 
                 token = authorizationHeader.substring("Bearer".length()).trim();
@@ -62,9 +62,9 @@ public class AuthFilter implements ContainerRequestFilter {
 
     private boolean isUserInRole(Role[] userRoles, Role[] roles) {
 
-        for(Role role: roles) {
-            for(Role userRole: userRoles) {
-                if(role.equals(userRole))
+        for (Role role : roles) {
+            for (Role userRole : userRoles) {
+                if (role.equals(userRole))
                     return true;
             }
         }
