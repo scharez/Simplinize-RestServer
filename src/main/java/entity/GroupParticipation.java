@@ -5,7 +5,9 @@ import javax.persistence.*;
 @Entity
 @NamedQueries({
         @NamedQuery(name = "GroupParticipation.getPartByGroupId",
-                query = "select gp from GroupParticipation gp where gp.group.id = :id")
+                query = "select gp from GroupParticipation gp where gp.group.id = :id"),
+        @NamedQuery(name = "GroupParticipation.getPartByGroupIdAndStudentId",
+                query = "select gp from GroupParticipation gp where gp.group.id = :groupId and gp.student.id = :studentId")
 
 })
 

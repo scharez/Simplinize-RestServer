@@ -13,13 +13,19 @@ public class CourseDTO {
 
     private String place;
 
-    private SkiTeacher instructor;
+    private SkiTeacherDTO instructor;
 
-    public CourseDTO(Date from, Date to, String place, SkiTeacher instructor) {
+    public CourseDTO(Date from, Date to, String place, SkiTeacherDTO instructor) {
         this.from = from;
         this.to = to;
         this.place = place;
         this.instructor = instructor;
+    }
+
+    public CourseDTO(Date from, Date to, String place) {
+        this.from = from;
+        this.to = to;
+        this.place = place;
     }
 
     public Date getFrom() {
@@ -46,11 +52,11 @@ public class CourseDTO {
         this.place = place;
     }
 
-    public SkiTeacher getInstructor() {
+    public SkiTeacherDTO getInstructor() {
         return instructor;
     }
 
-    public void setInstructor(SkiTeacher instructor) {
+    public void setInstructor(SkiTeacherDTO instructor) {
         this.instructor = instructor;
     }
 }

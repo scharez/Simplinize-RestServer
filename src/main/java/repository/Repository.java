@@ -1,6 +1,6 @@
 package repository;
 
-import dto.LoginDTO;
+import dto.*;
 import entity.*;
 import org.bouncycastle.util.encoders.Hex;
 import org.json.JSONArray;
@@ -139,6 +139,9 @@ public class Repository {
         JSONObject data = new JSONObject();
         data.put("id", user.getId())
                 .put("credentials", user.getUsername())
+                .put("firstName", user.getFirstName())
+                .put("lastName", user.getLastName())
+                .put("email", user.getEmail())
                 .put("token", jwtToken);
 
         return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray().put(data)));
@@ -234,7 +237,10 @@ public class Repository {
 
         JSONObject data = new JSONObject();
         data.put("id", person.getId())
-                .put("credentials", person.getEmail())
+                .put("credentials", "null")
+                .put("firstName", person.getFirstName())
+                .put("lastName", person.getLastName())
+                .put("email", person.getEmail())
                 .put("token", jwtToken);
 
         return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray().put(data)));
@@ -295,15 +301,43 @@ public class Repository {
         return "<h1> Verificated! </h1>";
     }
 
-    public Response assignCourse(Date from, Date to, String place, SkiTeacher instructor) {
+    public Response assignCourse(Date from, Date to, String place, long teacherId) {
 
-        Course course = new Course(from, to, place, instructor);
+        SkiTeacher skiTeacher = getSkiTeacherById(teacherId);
+
+        if(skiTeacher == null) {
+            return rb.genRes(jb.genRes("hint", "assignCourse", "SkiTeacher does not exist"));
+        }
+
+        if(!skiTeacher.getRoles().contains(Role.INSTRUCTOR)) {
+            return rb.genRes(jb.genRes("hint", "assignCourse", "This SkiTeacher has no Role Instuctor"));
+        }
+
+        Course course = new Course(from, to, place, skiTeacher);
 
         em.getTransaction().begin();
         em.persist(course);
         em.getTransaction().commit();
 
         return rb.genRes(jb.genRes("ok", "assignCourse", "Course has been assigend successfully"));
+    }
+
+    public Response updateCourse(long courseId, CourseDTO c) {
+
+        Course course = getCourseById(courseId);
+
+        if(course == null) {
+            return rb.genRes(jb.genRes("hint", "updateCourse", "This SkiTeacher does not exist!"));
+        }
+
+        course.setFrom(c.getFrom());
+        course.setTo(c.getTo());
+        course.setPlace(c.getPlace());
+
+        em.merge(course);
+
+
+        return rb.genRes(jb.genRes("ok", "updateCourse", "Successfully updated Course!"));
     }
 
     public Response addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -545,7 +579,7 @@ public class Repository {
         studentQuery.setParameter("id", studentId);
 
         if (studentQuery.getResultList().size() == 0) {
-            return rb.genRes(jb.genRes("error", "addChildrenToGroup", "This Student does not exist"));
+            return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "This Student does not exist"));
         }
 
         TypedQuery<Group> groupQuery = em.createNamedQuery("Group.getGroupById", Group.class);
@@ -575,6 +609,109 @@ public class Repository {
         }
 
         return rb.genRes(jb.genDataRes("getSkiTeachers", new JSONArray(skiTeacherList)));
+    }
+
+    public Response updateChildren(StudentDTO s, long id) {
+
+        Student student = em.find(Student.class, id);
+        student.setBirthday(s.getBirthday());
+        student.setFirstName(s.getFirstName());
+        student.setLastName(s.getLastName());
+        student.setHouseNumber(s.getHouseNumber());
+        student.setPlace(s.getPlace());
+        student.setPostCode(s.getPostCode());
+        student.setStreet(s.getStreet());
+
+        em.merge(student);
+
+        return rb.genRes("Updated Children");
+    }
+
+    public Response deleteChildren(long id) {
+
+        Student student = em.find(Student.class, id);
+        em.remove(student);
+
+        return rb.genRes("Removed");
+    }
+
+    public Response deleteSkiTeacher(long id) {
+
+        SkiTeacher teacher = em.find(SkiTeacher.class, id);
+        em.remove(teacher);
+
+        //Email senden, dass dieser SkiTeacher gelöscht wurde
+
+        return rb.genRes("Removed SkiTeacher");
+    }
+
+    public Response updateSkiTeacher(long id, SkiTeacherDTO t) {
+
+        SkiTeacher skiTeacher = em.find(SkiTeacher.class, id);
+        skiTeacher.setBirthday(t.getBirthday());
+        skiTeacher.setRoles(t.getRoles());
+        skiTeacher.setUsername(t.getUsername());
+        skiTeacher.setEmail(t.getEmail()); // wird dann noch per email bestätigt
+        skiTeacher.setLastName(t.getLastName());
+        skiTeacher.setFirstName(t.getFirstName());
+
+        em.merge(skiTeacher);
+
+        return rb.genRes("Updated SkiTeacher");
+    }
+
+    public Response deleteContactPerson(long id) {
+
+        ContactPerson contactPerson = em.find(ContactPerson.class, id);
+        em.remove(contactPerson);
+
+        return rb.genRes("Removed ContactPerson");
+    }
+
+    public Response updateContactPerson(long id, ContactPersonDTO c) {
+
+        ContactPerson contactPerson = em.find(ContactPerson.class, id);
+        contactPerson.setPhone(c.getPhoneNumber());
+        contactPerson.setEmail(c.getEmail()); // wird dann noch per email bestätigt
+        contactPerson.setFirstName(c.getFirstName());
+        contactPerson.setLastName(c.getLastName());
+
+        em.merge(contactPerson);
+
+        return rb.genRes("Updated SkiTeacher");
+    }
+
+    public Response setRaceTime(long groupiÍd, long studentId, String time) {
+
+        TypedQuery<GroupParticipation> query = em.createNamedQuery("GroupParticipation.getPartByGroupIdAndStudentId", GroupParticipation.class);
+        query.setParameter("groupId", groupiÍd);
+        query.setParameter("studentId", studentId);
+
+        List<GroupParticipation> groupParticipations = query.getResultList();
+
+        if (groupParticipations.size() == 0) {
+            return rb.genRes(jb.genRes("hint", "setRaceTime", "This Member does not exist in this group"));
+        }
+
+        groupParticipations.get(0).setTime(Double.parseDouble(time));
+
+
+        return rb.genRes(jb.genRes("ok", "setRaceTime", "RaceTime successfully set for this Member"));
+    }
+
+    public Response setGroupRaceStart(long groupId, String time) {
+
+        Group group = getGroupById(groupId);
+
+        if(group == null) {
+            return rb.genRes(jb.genRes("hint", "setGroupRaceStart", "This Group does not exist!"));
+        }
+
+        group.setStartTime(time);
+
+        em.merge(group);
+
+        return rb.genRes((jb.genRes("ok", "setGroupRaceStart", "RaceTime successfully set for this Group!")));
     }
 
 }

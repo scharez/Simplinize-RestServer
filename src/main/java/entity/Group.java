@@ -19,6 +19,8 @@ public class Group {
     private int participants;
     private int amount;
 
+    private String startTime;
+
     @ManyToOne
     private Course course;
 
@@ -40,6 +42,13 @@ public class Group {
         this.proficiency = proficiency;
         this.participants = participants;
         this.amount = amount;
+    }
+
+    public Group(Proficiency proficiency, int participants, int amount, String startTime) {
+        this.proficiency = proficiency;
+        this.participants = participants;
+        this.amount = amount;
+        this.startTime = startTime;
     }
 
     public long getId() {
@@ -88,5 +97,13 @@ public class Group {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 }

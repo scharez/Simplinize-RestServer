@@ -25,10 +25,10 @@ public class AppService {
     }
 
     /**
-     * Register a Child
+     * Register Student
      *
-     * @param s the Transfer Object the Ski-Teacher Entity
-     * @return a json which can contain an error or a successfully login message
+     * @param s dto of Ski-Teacher
+     * @return Response with a json string
      */
 
     @Secure(Role.CONTACTPERSON)
@@ -43,11 +43,46 @@ public class AppService {
     }
 
     /**
+     * Update Student
+     *
+     * @param s dto of Student
+     * @param id of Student
+     * @return Response with a json string
+     */
+
+    @Secure(Role.CONTACTPERSON)
+    @Path("updateChildren/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PUT
+    public Response updateChildren(StudentDTO s, @PathParam("id") long id) {
+
+        return Repository.getInstance().updateChildren(s, id);
+    }
+
+    /**
+     * Delete a Child
+     *
+     * @param id dto of Student
+     * @return Response with a json string
+     */
+
+    @Secure(Role.CONTACTPERSON)
+    @Path("deleteChildren/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @DELETE
+    public Response deleteChildren(@PathParam("id") long id) {
+
+        return Repository.getInstance().deleteChildren(id);
+    }
+
+    /**
      * Add Children to Course
      *
-     * @param studentId
-     * @param courseId
-     * @return a json which can contain an error or a successfully login message
+     * @param studentId of Student
+     * @param courseId of Course
+     * @return Response with a json string
      */
 
     @Secure(Role.CONTACTPERSON)
@@ -61,9 +96,9 @@ public class AppService {
     }
 
     /**
-     * Get all Children
+     * Get all Students
      *
-     * @return
+     * @return Response with a json string
      */
 
     @Secure(Role.CONTACTPERSON)
@@ -77,9 +112,25 @@ public class AppService {
     }
 
     /**
+     * Get Child of Contactperson
+     *
+     * @return Response with a json string
+     */
+
+    @Secure(Role.CONTACTPERSON)
+    @Path("getChild")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    public Response getChild(@QueryParam("studentId") long studentId) {
+
+        return Repository.getInstance().getChildren(studentId); //getChild
+    }
+
+    /**
      * Get Children of Contactperson
      *
-     * @return
+     * @return Response with a json string
      */
 
     @Secure(Role.CONTACTPERSON)
@@ -87,9 +138,10 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response getChildren(@QueryParam("studentId") long studentId) {
+    public Response getChildren() {
 
-        return Repository.getInstance().getChildren(studentId);
+        //return Repository.getInstance().getChildren(); //Mit JWT Token get Children und dann alle Kinder von Person selektieren
+        return null;
     }
 
     /*
@@ -97,10 +149,10 @@ public class AppService {
     */
 
     /**
-     * Assign a course
+     * Assign course
      *
-     * @param  course the Transfer Object the Ski-Teacher Entity
-     * @return a json which can contain an error or a successfully login message
+     * @param course dto of Course
+     * @return Response with a json string
      */
 
     @Secure(Role.ADMIN)
@@ -110,8 +162,32 @@ public class AppService {
     @POST
     public Response assignCourse(CourseDTO course) {
 
-        return Repository.getInstance().assignCourse(course.getFrom(), course.getTo(), course.getPlace(), course.getInstructor());
+        return Repository.getInstance().assignCourse(course.getFrom(), course.getTo(), course.getPlace(), course.getInstructor().getId());
     }
+
+    /**
+     * Update course
+     *
+     * @param course dto of Course
+     * @return Response with a json string
+     */
+
+    @Secure(Role.ADMIN)
+    @Path("updateCourse/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @PUT
+    public Response updateCourse(@PathParam("id") long courseId, CourseDTO course) {
+
+        return Repository.getInstance().updateCourse(courseId, course);
+    }
+
+    /**
+     * Create Group
+     *
+     * @param g dto of Group
+     * @return a json which can contain an error or a successfully login message
+     */
 
     // Wird eventuell Automatisch erstellt, anhand der Teilnehmeranzahl, Anzahl der Gruppen mit der Proficiency GRÜN
     // Wird automatisch zum akutellen Course hinzugefügt
@@ -125,6 +201,14 @@ public class AppService {
         return Repository.getInstance().createGroup(g.getProficiency(), g.getParticipants(), g.getAmount());
     }
 
+    /**
+     * Add teacher to group
+     *
+     * @param skiTeacherId of SkiTeacher
+     * @param groupId of Group
+     * @return Response with a json string
+     */
+
     @Secure(Role.ADMIN)
     @Path("addTeacherToGroup")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -134,6 +218,13 @@ public class AppService {
 
         return Repository.getInstance().addTeacherToGroup(groupId, skiTeacherId);
     }
+
+    /**
+     * Get all groups
+     *
+     * @param  courseId of Course
+     * @return Response with a json string
+     */
 
     @Secure(Role.ADMIN)
     @Path("getAllGroups")
@@ -145,6 +236,13 @@ public class AppService {
         return Repository.getInstance().getAllGroups(courseId);
     }
 
+    /**
+     * Get all course members
+     *
+     * @param courseId of Course
+     * @return Response with a json string
+     */
+
     @Secure(Role.ADMIN)
     @Path("getAllCourseMembers")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -154,6 +252,12 @@ public class AppService {
 
         return Repository.getInstance().getAllCourseMembers(courseId);
     }
+
+    /**
+     * Get SkiTeachers
+     *
+     * @return Response with a json string
+     */
 
     @Secure(Role.ADMIN)
     @Path("getSkiTeachers")
@@ -169,6 +273,13 @@ public class AppService {
 ------------------------------------------------------------------------------------------------------------------------
     */
 
+    /**
+     * Get group members
+     *
+     * @param  groupId of Group
+     * @return Response with a json string
+     */
+
     @Secure(Role.SKITEAM)
     @Path("getGroupMembers")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -181,6 +292,13 @@ public class AppService {
 
     //Programmtechnisch dann so programmieren, dass der Skiteacher immer vom akutellen Course selektiert von der DB!!
 
+    /**
+     * Get Group
+     *
+     * @param groupId of Group
+     * @return Response with a json string
+     */
+
     @Secure(Role.SKITEAM)
     @Path("getGroup")
     @Produces(MediaType.APPLICATION_JSON)
@@ -189,6 +307,13 @@ public class AppService {
 
         return null;
     }
+
+    /**
+     * Get Course Paticipants
+     *
+     * @param  proficiency
+     * @return Response with a json string
+     */
 
     @Secure(Role.SKITEAM)
     @Path("getCourseParticipants")
@@ -200,6 +325,14 @@ public class AppService {
         return Repository.getInstance().getCourseParticipants(proficiency);
     }
 
+    /**
+     * Add Children to Course
+     *
+     * @param  studentId of Student
+     * @param groupId of Group
+     * @return Response with a json string
+     */
+
     @Secure(Role.SKITEAM)
     @Path("addChildrenToGroup")
     @Produces(MediaType.APPLICATION_JSON)
@@ -209,5 +342,43 @@ public class AppService {
 
         return Repository.getInstance().addChildrenToGroup(studentId, groupId);
     }
+
+    /**
+     * Set race time
+     *
+     * @param  groupId of Group
+     * @param studentId of Student
+     * @param time race time of Student
+     * @return Response with a json string
+     */
+
+    @Secure(Role.RACE)
+    @Path("setRaceTime/{groupId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public Response setRaceTime(@PathParam("groupId") long groupId, @QueryParam("studentId") long studentId, @QueryParam("time") String time) {
+
+        return Repository.getInstance().setRaceTime(groupId, studentId, time);
+    }
+
+    /**
+     * Set group race start
+     *
+     * @param  groupId of Group
+     * @param time race start time of Group
+     * @return Response with a json string
+     */
+
+    @Secure(Role.RACE)
+    @Path("setGroupRaceStart")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public Response setGroupRaceStart(@QueryParam("groupId") long groupId, @QueryParam("time") String time) {
+
+        return Repository.getInstance().setGroupRaceStart(groupId, time);
+    }
+
 
 }
