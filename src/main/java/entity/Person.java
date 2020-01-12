@@ -33,7 +33,7 @@ public class Person {
 
     private String salt;
 
-    @ManyToMany()
+    @ManyToMany(cascade = CascadeType.PERSIST)
     private List<Student> students;
 
     @OneToOne(cascade = CascadeType.PERSIST)

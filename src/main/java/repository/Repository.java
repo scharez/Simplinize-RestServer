@@ -144,7 +144,7 @@ public class Repository {
                 .put("email", user.getEmail())
                 .put("token", jwtToken);
 
-        return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray().put(data)));
+        return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray(data)));
     }
 
     public Response addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -243,7 +243,7 @@ public class Repository {
                 .put("email", person.getEmail())
                 .put("token", jwtToken);
 
-        return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray().put(data)));
+        return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray(data)));
     }
 
     public Response registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
