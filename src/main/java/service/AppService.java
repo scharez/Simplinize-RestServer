@@ -39,7 +39,7 @@ public class AppService {
     public Response registerChildren(StudentDTO s) {
 
         return Repository.getInstance().registerChildren(s.getFirstName(), s.getLastName(), s.getBirthday(), s.getPostCode(),
-                s.getPlace(),s.getHouseNumber(), s.getStreet());
+                s.getPlace(),s.getHouseNumber(), s.getStreet(), s.getGender());
     }
 
     /**

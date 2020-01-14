@@ -12,10 +12,11 @@ public class StudentDTO {
     private String place;
     private String houseNumber;
     private String street;
+    private String gender;
 
     public StudentDTO() { }
 
-    public StudentDTO(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
+    public StudentDTO(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street, String gender) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.birthday = birthday;
@@ -23,6 +24,7 @@ public class StudentDTO {
         this.place = place;
         this.houseNumber = houseNumber;
         this.street = street;
+        this.gender = gender;
     }
 
     public String getFirstName() {
@@ -79,5 +81,13 @@ public class StudentDTO {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 }

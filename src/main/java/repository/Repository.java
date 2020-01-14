@@ -144,7 +144,7 @@ public class Repository {
                 .put("email", user.getEmail())
                 .put("token", jwtToken);
 
-        return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray(data)));
+        return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray().put(data)));
     }
 
     public Response addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -243,7 +243,7 @@ public class Repository {
                 .put("email", person.getEmail())
                 .put("token", jwtToken);
 
-        return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray(data)));
+        return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray().put(data)));
     }
 
     public Response registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
@@ -408,9 +408,9 @@ public class Repository {
         return rb.genRes(jb.genDataRes("getAllCourseMembers", new JSONArray(list)));
     }
 
-    public Response registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street) {
+    public Response registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street, String gender) {
 
-        Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street);
+        Student student = new Student(firstName, lastName, birthday, postCode, place, houseNumber, street, gender);
 
         Person person = getPerson();
 
@@ -621,6 +621,7 @@ public class Repository {
         student.setPlace(s.getPlace());
         student.setPostCode(s.getPostCode());
         student.setStreet(s.getStreet());
+        student.setGender(s.getGender());
 
         em.merge(student);
 

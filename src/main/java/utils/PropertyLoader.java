@@ -13,8 +13,6 @@ public class PropertyLoader {
 
         this.prop = new Properties();
 
-        //new FileInputStream("src/main/resources/properties/simplinize.properties")
-
         try {
             prop.load(Thread.currentThread().getContextClassLoader().getResourceAsStream("properties/simplinize.properties"));
         } catch (IOException io) {
