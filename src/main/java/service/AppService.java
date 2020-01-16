@@ -14,16 +14,9 @@ import javax.ws.rs.core.Response;
 @Path("app")
 public class AppService {
 
-
-    @Path("test")
-    @GET
-    public Response test() {
-
-        return Response.status(Response.Status.UNAUTHORIZED)
-                .entity("SEAS OIDA")
-                .build();
-    }
-
+    // TODO: 16.01.20 generate Server status Response! 
+    
+    
     /**
      * Register Student
      *

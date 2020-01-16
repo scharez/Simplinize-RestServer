@@ -19,6 +19,19 @@ public class JsonBuilder {
         return json.toString();
     }
 
+    public String genExceptionRes(String msg) {
+
+        JSONObject json = new JSONObject();
+
+        json.put("typ", "error")
+                .put("message", msg);
+
+        System.out.println();
+        System.out.println(ConsoleColor.green() + json.toString() + ConsoleColor.RESET);
+
+        return json.toString();
+    }
+
     public String genDataRes(String resource, JSONArray data) {
 
         JSONObject json = new JSONObject();
@@ -32,5 +45,7 @@ public class JsonBuilder {
 
         return json.toString();
     }
+
+
 
 }

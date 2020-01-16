@@ -102,7 +102,7 @@ public class Repository {
                 return loginTeacher(login.getCredentials(), login.getPassword());
 
             default:
-                return rb.genErrorRes(jb.genRes("error", "login", "Something went wrong"));
+                return rb.genErrorRes(jb.genRes("error", "login", "Invalid logintype!"));
         }
     }
 
@@ -159,6 +159,15 @@ public class Repository {
         person.setUsername(firstName.toLowerCase().charAt(0) + "." + lastName.toLowerCase());
 
         Token token = new Token(person);
+
+        TypedQuery<Long> queryUniqueUsername = em.createNamedQuery("SkiTeacher.uniqueUsername", Long.class);
+        queryUniqueUsername.setParameter("username", person.getUsername());
+
+        if(queryUniqueUsername.getSingleResult() != 0) {
+            return rb.genRes(jb.genRes("hint", "addSkiTeacher", "Username already exists"));
+        }
+
+        // TODO: 16.01.20 When Username already assigned generate an other one!
 
         TypedQuery<Long> queryUniqueMail = em.createNamedQuery("Person.uniqueEmail", Long.class);
         queryUniqueMail.setParameter("email", person.getEmail());

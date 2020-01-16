@@ -2,8 +2,11 @@ package dto;
 
 import entity.Role;
 
-public class LoginDTO {
+import javax.validation.constraints.NotNull;
 
+
+public class LoginDTO {
+    
     private String credentials;
     private String password;
     private Role type;

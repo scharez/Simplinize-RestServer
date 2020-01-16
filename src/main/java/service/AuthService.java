@@ -37,7 +37,7 @@ public class AuthService {
      * @return Response with a json string
      */
 
-    @Path("addSkiTeacher") // kann ja eigentlich nur der ADMIN aufrufen daher bleibt es eine einzelne Schnittstelle
+    @Path("addSkiTeacher") // kann ja eigentlich nur der ADMIN aufrufen, daher ohne secure
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @POST

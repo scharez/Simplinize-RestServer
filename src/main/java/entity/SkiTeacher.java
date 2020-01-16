@@ -8,6 +8,8 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name="SkiTeacher.uniqueEmail",
                 query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.email = :email"),
+        @NamedQuery(name="SkiTeacher.uniqueUsername",
+                query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.username = :username"),
         @NamedQuery(name="SkiTeacher.getAllTeachers",
                 query="SELECT s FROM SkiTeacher s "),
         @NamedQuery(name="SkiTeacher.getUser",

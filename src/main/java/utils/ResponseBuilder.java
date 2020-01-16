@@ -25,6 +25,16 @@ public class ResponseBuilder {
         return genResponse(Response.Status.UNAUTHORIZED, msg);
     }
 
+    public Response genNotAllowedRes(String msg) {
+
+        return genResponse(Response.Status.METHOD_NOT_ALLOWED, msg);
+    }
+
+    public Response genNotFoundRes(String msg) {
+
+        return genResponse(Response.Status.NOT_FOUND, msg);
+    }
+
     private Response genResponse(Response.Status status, String msg) {
 
         CacheControl cc = new CacheControl();
