@@ -3,6 +3,7 @@ package entity;
 import javax.persistence.*;
 
 @Entity
+@Table(name="\"GROUP\"")
 @NamedQueries({
         @NamedQuery(name="Group.getAllGroups",
                 query="SELECT g FROM Group g"),
@@ -10,6 +11,10 @@ import javax.persistence.*;
                 query="SELECT g FROM Group g where g.id = :id"),
         @NamedQuery(name="Group.getGroupsByCourseID",
                 query="SELECT g FROM Group g WHERE g.course.id = :id"),
+        @NamedQuery(name="Group.getGroupsByTeacherId",
+                query="SELECT g FROM Group g WHERE g.skiTeacher.id = :id"),
+        @NamedQuery(name="Group.getGroupsByTeacherIdANDCourseId",
+                query="SELECT g FROM Group g WHERE g.skiTeacher.id = :sId AND g.course.id = :cId")
 })
 public class Group {
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,7 +22,6 @@ public class Group {
     private long id;
 
     private int participants;
-    private int amount;
 
     private String startTime;
 
@@ -32,23 +36,16 @@ public class Group {
 
     public Group() {}
 
-    public Group(Course course, Proficiency proficiency, int participants) {
-        this.course = course;
-        this.proficiency = proficiency;
-        this.participants = participants;
-    }
-
-    public Group(Proficiency proficiency, int participants, int amount) {
-        this.proficiency = proficiency;
-        this.participants = participants;
-        this.amount = amount;
-    }
-
-    public Group(Proficiency proficiency, int participants, int amount, String startTime) {
-        this.proficiency = proficiency;
-        this.participants = participants;
-        this.amount = amount;
+    public Group(long id, String startTime, Course course, SkiTeacher skiTeacher) {
+        this.id = id;
         this.startTime = startTime;
+        this.course = course;
+        this.skiTeacher = skiTeacher;
+    }
+
+    public Group(Proficiency proficiency, int participants) {
+        this.proficiency = proficiency;
+        this.participants = participants;
     }
 
     public long getId() {
@@ -89,14 +86,6 @@ public class Group {
 
     public void setParticipants(int participants) {
         this.participants = participants;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
     }
 
     public String getStartTime() {

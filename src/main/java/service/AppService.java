@@ -14,8 +14,7 @@ import javax.ws.rs.core.Response;
 @Path("app")
 public class AppService {
 
-    // TODO: 16.01.20 generate Server status Response! 
-    
+    // TODO: 16.01.20 generate Server status Response!
     
     /**
      * Register Student
@@ -189,9 +188,9 @@ public class AppService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createGroup(GroupDTO g) {
+    public Response createGroup(@QueryParam("courseId") long courseId, GroupDTO g) {
 
-        return Repository.getInstance().createGroup(g.getProficiency(), g.getParticipants(), g.getAmount());
+        return Repository.getInstance().createGroup(g.getProficiency(), g.getParticipants(), g.getAmount(), courseId);
     }
 
     /**
@@ -266,6 +265,7 @@ public class AppService {
 ------------------------------------------------------------------------------------------------------------------------
     */
 
+
     /**
      * Get group members
      *
@@ -274,21 +274,20 @@ public class AppService {
      */
 
     @Secure(Role.SKITEAM)
-    @Path("getGroupMembers")
+    @Path("getGroupParticipations")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response getGroupMembers(@QueryParam("groupId") long groupId) {
+    public Response getGroupParticipations(@QueryParam("groupId") long groupId) {
 
-        return Repository.getInstance().getGroupMembers(groupId);
+        return Repository.getInstance().getGroupParticipations(groupId);
     }
 
     //Programmtechnisch dann so programmieren, dass der Skiteacher immer vom akutellen Course selektiert von der DB!!
 
     /**
      * Get Group
-     *
-     * @param groupId of Group
+     *y
      * @return Response with a json string
      */
 
@@ -296,9 +295,9 @@ public class AppService {
     @Path("getGroup")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response getGroup(@QueryParam("groupId") long groupId) {
+    public Response getGroup(@QueryParam("courseId") long courseId) {
 
-        return null;
+        return Repository.getInstance().getGroup(courseId);
     }
 
     /**
@@ -313,9 +312,9 @@ public class AppService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response getCourseParticipants(@QueryParam("proficiency") String proficiency) {
+    public Response getCourseParticipants(@QueryParam("proficiency") String proficiency, @QueryParam("courseId") long courseId) {
 
-        return Repository.getInstance().getCourseParticipants(proficiency);
+        return Repository.getInstance().getCourseParticipants(proficiency, courseId);
     }
 
     /**
@@ -372,6 +371,41 @@ public class AppService {
 
         return Repository.getInstance().setGroupRaceStart(groupId, time);
     }
+
+    @Secure(Role.SKITEAM)
+    @Path("getContactPerson")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public Response getContactPerson(@QueryParam("studentId") long studentId) {
+
+        return Repository.getInstance().getContactPerson(studentId);
+    }
+
+
+    @Secure(Role.SKITEAM)
+    @Path("getCourse/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
+    public Response getCourse(@PathParam("id") long id) {
+
+        return Repository.getInstance().getCourse(id);
+    }
+
+    @Secure(Role.SKITEAM)
+    @Path("getCurrentCourse")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
+    public Response getCurrentCourse() {
+
+        return Repository.getInstance().getCurrentCourse();
+    }
+
+
+
+
 
 
 }

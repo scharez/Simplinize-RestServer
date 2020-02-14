@@ -30,6 +30,8 @@ public class SkiTeacher extends Person {
     @Temporal(TemporalType.DATE)
     private Date joined;
 
+    // TODO: 17.01.20 Telefonnummer beim draufdrücken automatisch Whatsapp öffnen!  
+
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Role> roles;

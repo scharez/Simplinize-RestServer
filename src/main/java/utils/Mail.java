@@ -74,6 +74,12 @@ public class Mail {
         }
     }
 
+    /**
+     * 
+     * @param token
+     * @param person
+     */
+
     public void sendConfirmation(Token token, ContactPerson person) {
 
         Message message = new MimeMessage(session);

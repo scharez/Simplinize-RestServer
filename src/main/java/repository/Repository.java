@@ -1,5 +1,6 @@
 package repository;
 
+import com.sun.jndi.toolkit.ctx.AtomicDirContext;
 import dto.*;
 import entity.*;
 import org.bouncycastle.util.encoders.Hex;
@@ -54,9 +55,19 @@ public class Repository {
         this.token = token;
     }
 
+    /**
+     *
+     * @return
+     */
+
     private Response jwtError() {
         return rb.genErrorRes(jb.genRes("error", "jwt", "Server error"));
     }
+
+    /**
+     *
+     * @return
+     */
 
     private Person getPerson() {
 
@@ -75,6 +86,11 @@ public class Repository {
         return result.get(0);
     }
 
+    /**
+     *
+     * @return
+     */
+
     private SkiTeacher getSkiTeacher() {
 
         String email = jwt.checkSubject(this.token);
@@ -92,6 +108,12 @@ public class Repository {
         return result.get(0);
     }
 
+    /**
+     *
+     * @param login
+     * @return
+     */
+
     public Response login(LoginDTO login) {
 
         switch (login.getType()) {
@@ -105,6 +127,13 @@ public class Repository {
                 return rb.genErrorRes(jb.genRes("error", "login", "Invalid logintype!"));
         }
     }
+
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
 
     private Response loginTeacher(String username, String password) {
 
@@ -147,6 +176,15 @@ public class Repository {
         return rb.genRes(jb.genDataRes("loginTeacher", new JSONArray().put(data)));
     }
 
+    /**
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param roles
+     * @return
+     */
+
     public Response addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
 
         SkiTeacher person = new SkiTeacher();
@@ -186,6 +224,13 @@ public class Repository {
         return rb.genRes(jb.genRes("ok", "addSkiTeacher", "SkiTeacher added"));
     }
 
+    /**
+     *
+     * @param token
+     * @param password
+     * @return
+     */
+
     public String setPassword4SkiTeacher(String token, String password) {
 
         TypedQuery<Token> queryToken = em.createQuery("SELECT t FROM Token t WHERE t.token = :token", Token.class);
@@ -212,6 +257,13 @@ public class Repository {
         return "Password successfully set";
     }
 
+    /**
+     *
+     * @param email
+     * @param password
+     * @return
+     */
+
     private Response loginContactPerson(String email, String password) {
 
         TypedQuery<ContactPerson> query = em.createNamedQuery("ContactPerson.getUser", ContactPerson.class);
@@ -220,7 +272,7 @@ public class Repository {
         List<ContactPerson> result = query.getResultList();
 
         if (result.size() == 0) {
-            return rb.genRes(jb.genRes("hint", "loginContactPerson", "Person does not exist")); // Error
+            return rb.genRes(jb.genRes("hint", "loginContactPerson", "Person does not exist"));
         }
 
         ContactPerson person = result.get(0);
@@ -255,6 +307,16 @@ public class Repository {
         return rb.genRes(jb.genDataRes("loginContactPerson", new JSONArray().put(data)));
     }
 
+    /**
+     *
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param password
+     * @param phoneNumber
+     * @return
+     */
+
     public Response registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
 
         ContactPerson person = new ContactPerson();
@@ -288,6 +350,12 @@ public class Repository {
         return rb.genRes(jb.genRes("ok", "registerContactPerson", "Please confirm your email now"));
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
+
     public String confirmMailContactPerson(String token) {
 
         TypedQuery<Token> queryToken = em.createNamedQuery("Token.getToken", Token.class);
@@ -310,6 +378,17 @@ public class Repository {
         return "<h1> Verificated! </h1>";
     }
 
+    /**
+     *
+     * @param from
+     * @param to
+     * @param place
+     * @param teacherId
+     * @return
+     */
+
+    // TODO: 13.02.20 ÜberPrüfung dass man nicht 2 Course zum selben Datum erstellen kann!
+
     public Response assignCourse(Date from, Date to, String place, long teacherId) {
 
         SkiTeacher skiTeacher = getSkiTeacherById(teacherId);
@@ -323,6 +402,7 @@ public class Repository {
         }
 
         Course course = new Course(from, to, place, skiTeacher);
+        course.setFinished(false);
 
         em.getTransaction().begin();
         em.persist(course);
@@ -331,12 +411,19 @@ public class Repository {
         return rb.genRes(jb.genRes("ok", "assignCourse", "Course has been assigend successfully"));
     }
 
+    /**
+     *
+     * @param courseId
+     * @param c
+     * @return
+     */
+
     public Response updateCourse(long courseId, CourseDTO c) {
 
         Course course = getCourseById(courseId);
 
         if(course == null) {
-            return rb.genRes(jb.genRes("hint", "updateCourse", "This SkiTeacher does not exist!"));
+            return rb.genRes(jb.genRes("hint", "updateCourse", "This Course does not exist!"));
         }
 
         course.setFrom(c.getFrom());
@@ -348,6 +435,13 @@ public class Repository {
 
         return rb.genRes(jb.genRes("ok", "updateCourse", "Successfully updated Course!"));
     }
+
+    /**
+     *
+     * @param groupId
+     * @param skiTeacherId
+     * @return
+     */
 
     public Response addTeacherToGroup(long groupId, long skiTeacherId) {
 
@@ -373,6 +467,12 @@ public class Repository {
         return rb.genRes(jb.genRes("ok", "addTeacherToGroup", "SkiTeacher successfully added to Group"));
     }
 
+    /**
+     *
+     * @param courseId
+     * @return
+     */
+
     public Response getAllGroups(long courseId) {
 
         TypedQuery<Group> query = em.createNamedQuery("Group.getGroupsByCourseID", Group.class);
@@ -384,10 +484,14 @@ public class Repository {
             return rb.genRes(jb.genRes("hint", "getAllGroups", "There are no Groups"));
         }
 
-        JSONArray groups = new JSONArray(groupList);
-
-        return rb.genRes(jb.genDataRes("getAllGroups", groups));
+        return rb.genRes(jb.genDataRes("getAllGroups", new JSONArray(groupList)));
     }
+
+    /**
+     *
+     * @param courseId
+     * @return
+     */
 
     public Response getAllCourseMembers(long courseId) {
 
@@ -408,14 +512,34 @@ public class Repository {
             return rb.genRes(jb.genRes("hint", "getAllCourseMembers", "No Teilnahmen lol"));
         }
 
-        List<Student> list = new ArrayList<>();
 
-        for (CourseParticipation courseParticipation : courseParticipationList) {
-            list.add(courseParticipation.getStudent());
-        }
+        List<JSONObject> data = new ArrayList<>();
 
-        return rb.genRes(jb.genDataRes("getAllCourseMembers", new JSONArray(list)));
+        courseParticipationList.forEach(courseParticipation ->
+                data.add(new JSONObject()
+                        .put("id", courseParticipation.getId())
+                        .put("drivingCanFromRegistration", courseParticipation.getDrivingCanFromRegistration())
+                        .put("proficiency", courseParticipation.getProficiency())
+                        .put("student", courseParticipation.getStudent()))
+        );
+
+        return rb.genRes(jb.genDataRes("getAllCourseMembers", new JSONArray(data)));
     }
+
+    /**
+     *
+     * @param firstName
+     * @param lastName
+     * @param birthday
+     * @param postCode
+     * @param place
+     * @param houseNumber
+     * @param street
+     * @param gender
+     * @return
+     */
+
+    // TODO: 20.01.20 Student Überprüfung ob schon vorhanden! 
 
     public Response registerChildren(String firstName, String lastName, Date birthday, int postCode, String place, String houseNumber, String street, String gender) {
 
@@ -423,19 +547,28 @@ public class Repository {
 
         Person person = getPerson();
 
-        if (person != null) {
-            person.getStudents().add(student);
-        } else {
+        if (person == null) {
             return jwtError();
+
+        }
+        if(person.getStudents().contains(student)) {
+            return rb.genRes(jb.genRes("hint", "registerChildren", "Child was already registered"));
         }
 
-        em.getTransaction().commit();
+        person.getStudents().add(student);
+
+        em.getTransaction().begin();
         em.persist(student);
         em.merge(person);
         em.getTransaction().commit();
 
         return rb.genRes(jb.genRes("ok", "registerChildren", "Child has been registerd"));
     }
+
+    /**
+     *
+     * @return
+     */
 
     public Response getAllChildren() {
 
@@ -450,6 +583,12 @@ public class Repository {
         return rb.genRes(jb.genDataRes("getAllChildren", new JSONArray(studentList)));
     }
 
+    /**
+     *
+     * @param studentId
+     * @return
+     */
+
     public Response getChildren(long studentId) {
 
         TypedQuery<Student> query = em.createNamedQuery("Student.getStudentById", Student.class);
@@ -463,6 +602,13 @@ public class Repository {
 
         return rb.genRes(jb.genDataRes("getChildren", new JSONArray(studentList.get(0))));
     }
+
+    /**
+     *
+     * @param studentId
+     * @param courseId
+     * @return
+     */
 
     public Response addChildrenToCourse(long studentId, long courseId) {
 
@@ -501,11 +647,6 @@ public class Repository {
         return rb.genRes(jb.genRes("ok", "addChildrenToCourse", "Successfully added Children to Course"));
     }
 
-    private Course getCurrentCourse() {
-
-        return em.createQuery("SELECT max(c.to) from Course c where c.finished = false ", Course.class).getSingleResult();
-    }
-
     private Course getCourseById(long id) {
         return em.find(Course.class, id);
     }
@@ -518,28 +659,34 @@ public class Repository {
         return em.find(SkiTeacher.class, id);
     }
 
-    public Response createGroup(String proficiency, int participants, int amount) {
+    public Response createGroup(String proficiency, int participants, int amount, long courseId) {
 
-        Group group = new Group(Proficiency.valueOf(proficiency), participants, amount);
-
-        Course course = getCurrentCourse();
+        Course course = getCourseById(courseId);
 
         if (course == null) {
             return rb.genRes(jb.genRes("hint", "createGroup", "Error"));
         }
 
-        group.setCourse(course);
+        for (int i = 0; i < amount; i++) {
+            Group group = new Group(Proficiency.valueOf(proficiency), participants);
+            group.setCourse(course);
+            em.getTransaction().begin();
+            em.persist(group);
+            em.getTransaction().commit();
+        }
 
-        return rb.genRes(jb.genRes("ok", "createGroup", "Successfully created Group"));
+        String message = amount == 1 ? "Successfully created Group" : "Successfully created Groups";
+
+        return rb.genRes(jb.genRes("ok", "createGroup", message));
     }
 
     /**
-     * Gibt alle Gruppenmitglieder einer Gruppe zurück
+     * Gibt alle Teilnahmen einer Gruppe zurück
      * @param groupId
      * @return
      */
 
-    public Response getGroupMembers(long groupId) {
+    public Response getGroupParticipations(long groupId) {
 
         TypedQuery<GroupParticipation> query = em.createNamedQuery("GroupParticipation.getPartByGroupId", GroupParticipation.class);
         query.setParameter("id", groupId);
@@ -550,19 +697,26 @@ public class Repository {
             return rb.genRes(jb.genRes("hint", "getGroupMembers", "No Members in this group"));
         }
 
-        List<Student> studentList = new ArrayList<>();
+        List<JSONObject> getGroupParticipations = new ArrayList<>();
 
-        groupParticipations.forEach(groupParticipation -> studentList.add(groupParticipation.getStudent()));
+        groupParticipations.forEach(groupParticipation ->
 
-        return rb.genRes(jb.genDataRes("getGroupMembers", new JSONArray(studentList)));
+                getGroupParticipations.add(new JSONObject()
+                                .put("id", groupParticipation.getId())
+                                .put("rank",groupParticipation.getRank())
+                                .put("time",groupParticipation.getTime())
+                                .put("drivingCan",groupParticipation.getDrivingCan())
+                                .put("student", new JSONObject(groupParticipation.getStudent()))));
+
+        return rb.genRes(jb.genDataRes("getGroupMembers", new JSONArray(getGroupParticipations)));
     }
 
-    public Response getCourseParticipants(String proficiency) {
+    public Response getCourseParticipants(String proficiency, long courseId) {
 
-        Course course = getCurrentCourse();
+        Course course = getCourseById(courseId);
 
         if (course == null) {
-            return rb.genRes(jb.genRes("hint", "getCourseParticipants", "There is actuell no Course"));
+            return rb.genRes(jb.genRes("hint", "getCourseParticipants", "There is no Course"));
         }
 
         TypedQuery<CourseParticipation> query = em.createNamedQuery("CP.getFromCourseAndProficiency", CourseParticipation.class);
@@ -575,11 +729,17 @@ public class Repository {
             return rb.genRes(jb.genRes("hint", "getCourseParticipants", "There are no CourseParticipants with this proficiency"));
         }
 
-        List<Student> studentList = new ArrayList<>();
+        List<JSONObject> data = new ArrayList<>();
 
-        list.forEach(courseParticipation -> studentList.add(courseParticipation.getStudent()));
+        list.forEach(courseParticipation ->
+                data.add(new JSONObject()
+                .put("id", courseParticipation.getId())
+                .put("drivingCanFromRegistration", courseParticipation.getDrivingCanFromRegistration())
+                .put("proficiency", courseParticipation.getProficiency())
+                .put("student", courseParticipation.getStudent()))
+        );
 
-        return rb.genRes(jb.genDataRes("getCourseParticipants", new JSONArray(studentList)));
+        return rb.genRes(jb.genDataRes("getCourseParticipants", new JSONArray(data)));
     }
 
     public Response addChildrenToGroup(long studentId, long groupId) {
@@ -724,4 +884,98 @@ public class Repository {
         return rb.genRes((jb.genRes("ok", "setGroupRaceStart", "RaceTime successfully set for this Group!")));
     }
 
+    public Response getGroup(long courseId) {
+
+        SkiTeacher skiTeacher = getSkiTeacher();
+
+        if (skiTeacher == null) {
+            return jwtError();
+        }
+
+
+        Course course = getCourseById(courseId);
+
+        if(course == null) {
+            return rb.genRes(jb.genRes("hint", "getGroup", "No Course found"));
+        }
+
+        TypedQuery<Group> query = em.createNamedQuery("Group.getGroupsByTeacherIdANDCourseId", Group.class);
+        query.setParameter("sId", skiTeacher.getId());
+        query.setParameter("cId", course.getId());
+
+        List<Group> groupList = query.getResultList();
+
+        if (groupList.size() == 0) {
+            return rb.genRes(jb.genRes("hint", "getGroup", "Hab noch keine Gruppe!"));
+        }
+
+        Group group = groupList.get(0);
+
+        JSONObject data = new JSONObject();
+
+        data.put("id", group.getId())
+                .put("participants", group.getParticipants())
+                .put("startTime", group.getStartTime())
+                .put("proficiency", group.getProficiency());
+
+        return rb.genRes(jb.genDataRes("getGroup", new JSONArray().put(data)));
+    }
+
+    public Response getContactPerson(long studentId) {
+
+
+        return null;
+    }
+
+    public Response getCourse(long id) {
+
+        Course course = getCourseById(id);
+
+        if(course == null) {
+            return rb.genRes(jb.genRes("hint", "getCourse", "No Course found"));
+        }
+
+        JSONObject data = new JSONObject();
+
+        data.put("id", course.getId())
+                .put("from", course.getFrom())
+                .put("to", course.getTo())
+                .put("assigned", course.getAssigned())
+                .put("instructor", new JSONObject()
+                        .put("id", course.getInstructor().getId())
+                        .put("firstName", course.getInstructor().getFirstName())
+                        .put("lastName", course.getInstructor().getLastName())
+                        .put("email", course.getInstructor().getEmail()));
+
+
+        return rb.genRes(jb.genDataRes("getCourse", new JSONArray().put(data)));
+    }
+
+    public Response getCurrentCourse() {
+
+        List<Course> courseList = em.createQuery("SELECT c FROM Course c where c.assigned = (select max(x.assigned) from Course x)", Course.class).getResultList();
+
+        if(courseList == null) {
+            return rb.genRes(jb.genRes("hint", "getCurrentCourse", "Error of getting current Course"));
+        }
+
+        Course course = courseList.get(0);
+
+        JSONObject data = new JSONObject();
+
+        data.put("id", course.getId())
+                .put("from", course.getFrom())
+                .put("to", course.getTo())
+                .put("assigned", course.getAssigned())
+                .put("instructor", new JSONObject()
+                        .put("id", course.getInstructor().getId())
+                        .put("firstName", course.getInstructor().getFirstName())
+                        .put("lastName", course.getInstructor().getLastName())
+                        .put("email", course.getInstructor().getEmail()));
+
+
+        return rb.genRes(jb.genDataRes("getCurrentCourse", new JSONArray().put(data)));
+
+
+    }
 }

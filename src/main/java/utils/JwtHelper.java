@@ -15,6 +15,14 @@ public class JwtHelper {
 
     private PropertyLoader pl = new PropertyLoader();
 
+
+    /**
+     *
+     * @param subject
+     * @param roles
+     * @return
+     */
+
     public String create(String subject, Object[] roles) {
 
         return Jwts.builder()
@@ -26,6 +34,12 @@ public class JwtHelper {
                 .claim("role", Arrays.toString(roles))
                 .compact();
     }
+
+    /**
+     *
+     * @param token
+     * @return
+     */
 
     public String checkSubject(String token) {
 
@@ -40,6 +54,12 @@ public class JwtHelper {
         }
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
+
     public Role [] getRoles(String token) {
         String roles;
         roles =  Jwts.parser()
@@ -48,6 +68,17 @@ public class JwtHelper {
                 .getBody()
                 .get("role", String.class);
 
-        return new Role[]{Role.valueOf(roles)};
+        String[] SrolesArray = roles
+                .replace("[", "")
+                .replace("]", "")
+                .split(", ");
+
+        Role [] rolesArray = new Role[SrolesArray.length];
+
+        for (int i = 0; i < rolesArray.length; i++) {
+            rolesArray[i] = Role.valueOf(SrolesArray[i]);
+        }
+
+        return rolesArray;
     }
 }
