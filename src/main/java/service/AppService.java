@@ -93,7 +93,7 @@ public class AppService {
      * @return Response with a json string
      */
 
-    @Secure(Role.CONTACTPERSON)
+    @Secure(Role.ADMIN)
     @Path("getAllChildren")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -109,12 +109,12 @@ public class AppService {
      * @return Response with a json string
      */
 
-    @Secure(Role.CONTACTPERSON)
-    @Path("getChild")
+    @Secure({Role.CONTACTPERSON, Role.SKITEAM})
+    @Path("getChild/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    public Response getChild(@QueryParam("studentId") long studentId) {
+    public Response getChild(@PathParam("id") long studentId) {
 
         return Repository.getInstance().getChildren(studentId); //getChild
     }
