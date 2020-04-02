@@ -7,7 +7,9 @@ import javax.persistence.*;
         @NamedQuery(name="ContactPerson.getUser",
                 query="select p from ContactPerson p WHERE p.email = :email"),
         @NamedQuery(name="ContactPerson.uniqueEmail",
-                query = "select count(p) from ContactPerson p where p.email = :email")
+                query = "select count(p) from ContactPerson p where p.email = :email"),
+        @NamedQuery(name = "ContactPerson.getPersons",
+                query = "select p from ContactPerson p")
 })
 public class ContactPerson extends Person{
 

@@ -38,7 +38,8 @@ public class GroupParticipation {
     }
 
     public GroupParticipation(Group group, Student student) {
-
+        this.group = group;
+        this.student = student;
     }
 
     public long getId() {

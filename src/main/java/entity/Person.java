@@ -15,6 +15,8 @@ import java.util.List;
                 query="SELECT p FROM Person p WHERE p.email = :email"),
         @NamedQuery(name="Person.uniqueEmail",
                 query="SELECT COUNT(p) FROM Person p WHERE p.email = :email"),
+        @NamedQuery(name = "Person.getPersons",
+                query = "select p from Person p")
 })
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -30,6 +32,8 @@ public class Person {
     @Column(unique = true)
     private String email;
     private String password;
+
+    //private String phone;
 
     private String salt;
 
@@ -114,6 +118,17 @@ public class Person {
     public void setToken(Token token) {
         this.token = token;
     }
+
+    /*
+    public String getPhone() {
+        return firstName;
+    }
+
+    public void setPhone(String firstName) {
+        this.firstName = firstName;
+    }
+
+     */
 
     private void hashPassword(String password) {
 

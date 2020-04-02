@@ -1,6 +1,5 @@
 package repository;
 
-import com.sun.jndi.toolkit.ctx.AtomicDirContext;
 import dto.*;
 import entity.*;
 import org.bouncycastle.util.encoders.Hex;
@@ -56,7 +55,9 @@ public class Repository {
     }
 
     /**
-     * @return
+     * Generate a custom Response, if an JWT-Error exist
+     *
+     * @return Response
      */
 
     private Response jwtError() {
@@ -64,7 +65,9 @@ public class Repository {
     }
 
     /**
-     * @return
+     * Get a Person from the JWT-Token
+     *
+     * @return Person
      */
 
     private Person getPerson() {
@@ -85,7 +88,9 @@ public class Repository {
     }
 
     /**
-     * @return
+     * Get a SkiTeacher from the JWT-Token
+     *
+     * @return SkiTeacher
      */
 
     private SkiTeacher getSkiTeacher() {
@@ -106,8 +111,10 @@ public class Repository {
     }
 
     /**
+     * Logins a Person either ContactPerson or SkiTeacher
+     *
      * @param login
-     * @return
+     * @return Response
      */
 
     public Response login(LoginDTO login) {
@@ -125,9 +132,11 @@ public class Repository {
     }
 
     /**
+     * Login a SkiTeacher
+     *
      * @param username
      * @param password
-     * @return
+     * @return Response
      */
 
     private Response loginTeacher(String username, String password) {
@@ -172,11 +181,13 @@ public class Repository {
     }
 
     /**
+     * Adds a SkiTeacher
+     *
      * @param firstName
      * @param lastName
      * @param email
      * @param roles
-     * @return
+     * @return Response
      */
 
     public Response addSkiTeacher(String firstName, String lastName, String email, List<Role> roles) {
@@ -219,9 +230,11 @@ public class Repository {
     }
 
     /**
+     * Sets a Password for a SkiTeacher
+     *
      * @param token
      * @param password
-     * @return
+     * @return Response
      */
 
     public String setPassword4SkiTeacher(String token, String password) {
@@ -251,9 +264,11 @@ public class Repository {
     }
 
     /**
+     * Logins a ContactPerson
+     *
      * @param email
      * @param password
-     * @return
+     * @return Response
      */
 
     private Response loginContactPerson(String email, String password) {
@@ -300,12 +315,14 @@ public class Repository {
     }
 
     /**
+     * Registers a ContactPerson
+     *
      * @param firstName
      * @param lastName
      * @param email
      * @param password
      * @param phoneNumber
-     * @return
+     * @return Response
      */
 
     public Response registerContactPerson(String firstName, String lastName, String email, String password, String phoneNumber) {
@@ -342,8 +359,10 @@ public class Repository {
     }
 
     /**
+     * Send confirmation mail for a ContacPerson
+     *
      * @param token
-     * @return
+     * @return String with html elements
      */
 
     public String confirmMailContactPerson(String token) {
@@ -369,11 +388,13 @@ public class Repository {
     }
 
     /**
+     * Assign Course
+     *
      * @param from
      * @param to
      * @param place
      * @param teacherId
-     * @return
+     * @return Response
      */
 
     // TODO: 13.02.20 ÜberPrüfung dass man nicht 2 Course zum selben Datum erstellen kann!
@@ -400,9 +421,11 @@ public class Repository {
     }
 
     /**
+     * Update a Course
+     *
      * @param courseId
      * @param c
-     * @return
+     * @return Response
      */
 
     public Response updateCourse(long courseId, CourseDTO c) {
@@ -424,9 +447,11 @@ public class Repository {
     }
 
     /**
+     * Add a Teacher to a Group
+     *
      * @param groupId
      * @param skiTeacherId
-     * @return
+     * @return Response
      */
 
     public Response addTeacherToGroup(long groupId, long skiTeacherId) {
@@ -454,8 +479,10 @@ public class Repository {
     }
 
     /**
+     * Get all Groups which are in a Course
+     *
      * @param courseId
-     * @return
+     * @return Response
      */
 
     public Response getAllGroups(long courseId) {
@@ -469,12 +496,16 @@ public class Repository {
             return rb.genRes(jb.genRes("hint", "getAllGroups", "There are no Groups"));
         }
 
+        // TODO: 26.03.20 Besserer Response
+
         return rb.genRes(jb.genDataRes("getAllGroups", new JSONArray(groupList)));
     }
 
     /**
+     * Get all CourseMembers of a Course
+     *
      * @param courseId
-     * @return
+     * @return Response
      */
 
     public Response getAllCourseMembers(long courseId) {
@@ -511,6 +542,8 @@ public class Repository {
     }
 
     /**
+     * Register a Student
+     *
      * @param firstName
      * @param lastName
      * @param birthday
@@ -519,7 +552,7 @@ public class Repository {
      * @param houseNumber
      * @param street
      * @param gender
-     * @return
+     * @return Response
      */
 
     // TODO: 20.01.20 Student Überprüfung ob schon vorhanden! 
@@ -548,7 +581,9 @@ public class Repository {
     }
 
     /**
-     * @return
+     * Get all Students from the whole System
+     *
+     * @return Response
      */
 
     public Response getAllChildren() {
@@ -565,8 +600,10 @@ public class Repository {
     }
 
     /**
+     *
+     *
      * @param studentId
-     * @return
+     * @return Response
      */
 
     public Response getChildren(long studentId) {
@@ -591,16 +628,11 @@ public class Repository {
 
     public Response addChildrenToCourse(long studentId, long courseId) {
 
-        TypedQuery<Student> queryStudent = em.createNamedQuery("Student.getStudentById", Student.class);
-        queryStudent.setParameter("id", studentId);
+        Student student = em.find(Student.class, studentId);
 
-        List<Student> studentList = queryStudent.getResultList();
-
-        if (studentList.size() == 0) {
+        if (student == null) {
             return rb.genRes(jb.genRes("hint", "addChildrenToCourse", "Student does not exist"));
         }
-
-        Student student = studentList.get(0);
 
         TypedQuery<Course> queryCourse = em.createNamedQuery("Course.getCourseById", Course.class);
         queryCourse.setParameter("id", courseId);
@@ -724,10 +756,11 @@ public class Repository {
 
     public Response addChildrenToGroup(long studentId, long groupId) {
 
-        TypedQuery<Student> studentQuery = em.createNamedQuery("Student.getStudentById", Student.class);
-        studentQuery.setParameter("id", studentId);
+        // TODO: 02.04.20 Eigentlich auch überprüfen, ob schon eingezahlt wurde.
 
-        if (studentQuery.getResultList().size() == 0) {
+        Student student = em.find(Student.class, studentId);
+
+        if (student == null) {
             return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "This Student does not exist"));
         }
 
@@ -738,13 +771,37 @@ public class Repository {
             return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "This Group does not exist"));
         }
 
-        GroupParticipation gp = new GroupParticipation(groupQuery.getResultList().get(0), studentQuery.getResultList().get(0));
+        TypedQuery<GroupParticipation> gpQuery = em.createNamedQuery("GroupParticipation.getPartByGroupIdAndStudentId", GroupParticipation.class);
+        gpQuery.setParameter("groupId", groupId);
+        gpQuery.setParameter("studentId", studentId);
+
+        if(gpQuery.getResultList().size() != 0) {
+            return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "Student is already in a Group"));
+        }
+
+        List<Course> courseList = em.createQuery("SELECT c FROM Course c where c.assigned = (select max(x.assigned) from Course x)", Course.class).getResultList();
+
+        if (courseList == null) {
+            return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "Error of getting current Course"));
+        }
+
+        Course course = courseList.get(0);
+
+        TypedQuery<CourseParticipation> cpQuery = em.createNamedQuery("CP.getFromStudentAndCourse", CourseParticipation.class);
+        cpQuery.setParameter("studentId", groupId);
+        cpQuery.setParameter("courseId", course.getId());
+
+        if(cpQuery.getResultList().size() != 0) {
+            return rb.genRes(jb.genRes("hint", "addChildrenToGroup", "Kind ist noch nicht für Kurs registriert"));
+        }
+
+        GroupParticipation gp = new GroupParticipation(groupQuery.getResultList().get(0), student);
 
         em.getTransaction().begin();
         em.persist(gp);
         em.getTransaction().commit();
 
-        return rb.genRes(jb.genRes("ok", "addChildrenToGroup", "Student added to Course"));
+        return rb.genRes(jb.genRes("ok", "addChildrenToGroup", "Student added to Group"));
     }
 
     public Response getSkiTeachers() {
@@ -902,8 +959,45 @@ public class Repository {
 
     public Response getContactPerson(long studentId) {
 
+        TypedQuery<Person> query = em.createNamedQuery("Person.getPersons", Person.class);
+        List<Person> contactPersonList = query.getResultList();
 
-        return null;
+        if(contactPersonList.size() == 0) {
+            return rb.genRes(jb.genRes("hint", "getContactPerson", "There are no ContactPersons"));
+        }
+
+        List<Person> returnList = new ArrayList<>();
+
+        for (Person contactPerson: contactPersonList) {
+            for(Student student: contactPerson.getStudents()) {
+                if(studentId == student.getId()) {
+                    returnList.add(contactPerson);
+                }
+            }
+        }
+
+        if(returnList.size() == 0) {
+            return rb.genRes(jb.genRes("hint", "getContactPerson", "This Student has no ContactPersons"));
+        }
+
+        JSONArray dataArray = new JSONArray();
+
+        for (Person p : returnList) {
+
+            JSONObject data = new JSONObject();
+
+            data.put("id", p.getId())
+                    .put("firstName", p.getFirstName())
+                    .put("lastName", p.getLastName())
+                    .put("email", p.getEmail())
+                    .put("phone", "06643269827");
+
+            // TODO: 01.04.20 Phone Number von SkiTeacher und Contactperson
+
+            dataArray.put(data);
+        }
+
+        return rb.genRes(jb.genDataRes("getContactPerson",dataArray));
     }
 
     public Response getCourse(long id) {
@@ -953,10 +1047,26 @@ public class Repository {
                         .put("firstName", course.getInstructor().getFirstName())
                         .put("lastName", course.getInstructor().getLastName())
                         .put("email", course.getInstructor().getEmail()));
-
+                //.put("instructor", course.getInstructor());
+        // TODO: 01.04.20 ganze SkiTeacher Entität zurückschicken....
 
         return rb.genRes(jb.genDataRes("getCurrentCourse", new JSONArray().put(data)));
 
 
+    }
+
+    public Response setProficiency(long gpId, String pv) {
+
+        GroupParticipation gp = em.find(GroupParticipation.class, gpId);
+
+        if(gp == null) {
+            return rb.genRes(jb.genRes("hint", "setProficiency", "No CourseParticipation exist!"));
+        }
+
+        gp.setDrivingCan(Double.parseDouble(pv));
+
+        em.merge(gp);
+
+        return rb.genRes(jb.genRes("ok", "setProficiency", "Participation successfully set!"));
     }
 }

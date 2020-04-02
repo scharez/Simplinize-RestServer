@@ -8,6 +8,8 @@ import javax.persistence.*;
                 query="SELECT p FROM CourseParticipation p WHERE p.course.id = :courseId"),
         @NamedQuery(name="CP.getFromCourseAndProficiency",
                 query="SELECT p FROM CourseParticipation p WHERE p.course.id = :courseId and p.proficiency = :proficiency"),
+        @NamedQuery(name="CP.getFromStudentAndCourse",
+                query="SELECT p FROM CourseParticipation p WHERE p.student.id = :studentId and p.course.id = :courseId"),
 
 })
 public class CourseParticipation {
@@ -27,8 +29,9 @@ public class CourseParticipation {
     //Bezahlt oder nicht
     private boolean deposit;
 
-    private String drivingCanFromRegistration;
-    private Proficiency proficiency;
+    private String drivingCanFromRegistration; //Wenn tookPart true, dann wird von Vorjahr übernommen
+    private Proficiency proficiency; //Wenn Kurs abgeschlossen ist, wird der Driving Can von der GroupParticipation
+                                        // ausgewerten und hier eingetragen.
     private boolean waiting;
 
     private boolean tookPart;

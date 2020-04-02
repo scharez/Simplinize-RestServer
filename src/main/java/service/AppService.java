@@ -318,7 +318,7 @@ public class AppService {
     }
 
     /**
-     * Add Children to Course
+     * Add Children to Group
      *
      * @param  studentId of Student
      * @param groupId of Group
@@ -344,7 +344,7 @@ public class AppService {
      * @return Response with a json string
      */
 
-    @Secure(Role.RACE)
+    @Secure({Role.RACE, Role.ADMIN})
     @Path("setRaceTime/{groupId}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -355,6 +355,24 @@ public class AppService {
     }
 
     /**
+     * setProficiency
+     *
+     * @param gpId of Group
+     * @param pv of Student
+     * @return Response with a json string
+     */
+
+    @Secure({Role.RACE, Role.ADMIN})
+    @Path("setProficiency/{gpId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    @POST
+    public Response setProficency(@PathParam("gpId") long gpId, @QueryParam("proficiencyValue") String pv) {
+
+        return Repository.getInstance().setProficiency(gpId, pv);
+    }
+
+    /**
      * Set group race start
      *
      * @param  groupId of Group
@@ -362,7 +380,7 @@ public class AppService {
      * @return Response with a json string
      */
 
-    @Secure(Role.RACE)
+    @Secure({Role.RACE, Role.ADMIN})
     @Path("setGroupRaceStart")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
@@ -372,16 +390,29 @@ public class AppService {
         return Repository.getInstance().setGroupRaceStart(groupId, time);
     }
 
+    /**
+     * Get ContactPerson from StudentId
+     *
+     * @param studentId of Student
+     * @return Response with a json string
+     */
+
     @Secure(Role.SKITEAM)
     @Path("getContactPerson")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @POST
+    @GET
     public Response getContactPerson(@QueryParam("studentId") long studentId) {
 
         return Repository.getInstance().getContactPerson(studentId);
     }
 
+    /**
+     * Get Course
+     *
+     * @param id of Student
+     * @return Response with a json string
+     */
 
     @Secure(Role.SKITEAM)
     @Path("getCourse/{id}")
@@ -393,6 +424,12 @@ public class AppService {
         return Repository.getInstance().getCourse(id);
     }
 
+    /**
+     * Get CurrentCourse
+
+     * @return Response with a json string
+     */
+
     @Secure(Role.SKITEAM)
     @Path("getCurrentCourse")
     @Produces(MediaType.APPLICATION_JSON)
@@ -402,10 +439,4 @@ public class AppService {
 
         return Repository.getInstance().getCurrentCourse();
     }
-
-
-
-
-
-
 }
