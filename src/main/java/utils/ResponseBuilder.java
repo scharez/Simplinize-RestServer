@@ -5,45 +5,85 @@ import javax.ws.rs.core.Response;
 
 public class ResponseBuilder {
 
-    public Response genOkRes(String msg) {
+    /**
+     *
+     * @param msg
+     * @return
+     */
 
-        CacheControl cc = new CacheControl();
-        cc.setNoStore(true);
+    public Response genRes(String msg) { //type = hint oder ok
 
-        return Response.status(Response.Status.OK)
-                .cacheControl(cc)
-                .entity(msg)
-                .build();
+        return genResponse(Response.Status.OK, msg);
     }
 
-    public Response genErrorRes(String msg) {
+    /**
+     *
+     * @param msg
+     * @return
+     */
 
-        CacheControl cc = new CacheControl();
-        cc.setNoStore(true);
+    public Response genErrorRes(String msg) { //type = error z.B Beim email senden oder jwt Error im Repository
 
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .cacheControl(cc)
-                .entity(msg)
-                .build();
+        return genResponse(Response.Status.INTERNAL_SERVER_ERROR, msg);
     }
+
+    /**
+     *
+     * @param msg
+     * @return
+     */
 
     public Response genForbiddenRes(String msg) {
 
-        CacheControl cc = new CacheControl();
-        cc.setNoStore(true);
-
-        return Response.status(Response.Status.FORBIDDEN)
-                .cacheControl(cc)
-                .entity(msg)
-                .build();
+        return genResponse(Response.Status.FORBIDDEN, msg);
     }
+
+    /**
+     *
+     * @param msg
+     * @return
+     */
 
     public Response genUnauthorizedRes(String msg) {
 
+        return genResponse(Response.Status.UNAUTHORIZED, msg);
+    }
+
+    /**
+     *
+     * @param msg
+     * @return
+     */
+
+    public Response genNotAllowedRes(String msg) {
+
+        return genResponse(Response.Status.METHOD_NOT_ALLOWED, msg);
+    }
+
+    /**
+     *
+     * @param msg
+     * @return
+     */
+
+    public Response genNotFoundRes(String msg) {
+
+        return genResponse(Response.Status.NOT_FOUND, msg);
+    }
+
+    /**
+     *
+     * @param status
+     * @param msg
+     * @return
+     */
+
+    private Response genResponse(Response.Status status, String msg) {
+
         CacheControl cc = new CacheControl();
         cc.setNoStore(true);
 
-        return Response.status(Response.Status.UNAUTHORIZED)
+        return Response.status(status)
                 .cacheControl(cc)
                 .entity(msg)
                 .build();

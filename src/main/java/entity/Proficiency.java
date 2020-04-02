@@ -3,5 +3,5 @@ package entity;
 import javax.persistence.Enumerated;
 
 public enum Proficiency {
-    @Enumerated YELLOW, GREEN, ORANGE, PURPLE
+    @Enumerated LILA, ORANGE, GRUEN, GELB
 }

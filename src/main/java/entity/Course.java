@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name="\"COURSE\"")
 @NamedQueries({
         @NamedQuery(name="Course.getCourse",
                 query="SELECT c FROM Course c"),
@@ -16,22 +17,38 @@ public class Course {
     private long id;
 
     @Temporal(TemporalType.DATE)
-    private Date from;
+    private Date _from;
 
     @Temporal(TemporalType.DATE)
-    private Date to;
+    private Date _to;
+
+    @Temporal(TemporalType.DATE)
+    private Date assigned = new Date();
+
     private String place;
 
     @ManyToOne
     private SkiTeacher instructor;
 
-    public Course () {}
+    private boolean finished;
+
+    public Course() {
+    }
 
     public Course(Date from, Date to, String place, SkiTeacher instructor) {
-        this.from = from;
-        this.to = to;
+        this._from = from;
+        this._to = to;
         this.place = place;
         this.instructor = instructor;
+    }
+
+    public Course(long id, Date from, Date to, Date assigned,String place, SkiTeacher instructor, boolean finished) {
+        this.id = id;
+        this._from = from;
+        this._to = to;
+        this.place = place;
+        this.instructor = instructor;
+        this.finished = finished;
     }
 
     public long getId() {
@@ -43,19 +60,27 @@ public class Course {
     }
 
     public Date getFrom() {
-        return from;
+        return _from;
     }
 
     public void setFrom(Date from) {
-        this.from = from;
+        this._from = from;
     }
 
     public Date getTo() {
-        return to;
+        return _to;
     }
 
     public void setTo(Date to) {
-        this.to = to;
+        this._to = to;
+    }
+
+    public Date getAssigned() {
+        return assigned;
+    }
+
+    public void setAssigned(Date assigned) {
+        this.assigned = assigned;
     }
 
     public String getPlace() {
@@ -72,5 +97,13 @@ public class Course {
 
     public void setInstructor(SkiTeacher instructor) {
         this.instructor = instructor;
+    }
+
+    public boolean isFinished() {
+        return finished;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }

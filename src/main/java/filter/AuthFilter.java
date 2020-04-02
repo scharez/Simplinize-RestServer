@@ -12,7 +12,6 @@ import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.container.ResourceInfo;
-import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
@@ -41,15 +40,16 @@ public class AuthFilter implements ContainerRequestFilter {
 
         Secure secure = resourceMethod.getAnnotation(Secure.class);
 
-        if(resourceMethod.isAnnotationPresent(Secure.class)) {
+        if (resourceMethod.isAnnotationPresent(Secure.class)) {
             try {
+
                 token = authorizationHeader.substring("Bearer".length()).trim();
                 jwt.checkSubject(token);
 
                 if (isUserInRole(jwt.getRoles(token), secure.value())) {
                     Repository.getInstance().saveHeader(token);
                 } else {
-                    Response res = rb.genForbiddenRes(jb.genRes("error", resourceMethod.getName(), "You are not allowed"));
+                    Response res = rb.genForbiddenRes(jb.genRes("hint", resourceMethod.getName(), "You are not allowed"));
                     rc.abortWith(res);
                 }
             } catch (Exception ex) {
@@ -59,11 +59,19 @@ public class AuthFilter implements ContainerRequestFilter {
         }
     }
 
+    /**
+     *
+     * @param userRoles
+     * @param roles
+     * @return
+     */
+
     private boolean isUserInRole(Role[] userRoles, Role[] roles) {
 
-        for(Role role: roles) {
-            for(Role userRole: userRoles) {
-                if(role.equals(userRole)) /*|| role.equals(Role.EVERYONE))*/ return true;
+        for (Role role : roles) {
+            for (Role userRole : userRoles) {
+                if (role.equals(userRole))
+                    return true;
             }
         }
         return false;

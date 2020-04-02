@@ -1,5 +1,6 @@
 import org.glassfish.grizzly.http.server.StaticHttpHandler;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import utils.ConsoleColor;
 
@@ -13,14 +14,24 @@ public class Main {
 
     private static final String BASE_URI = "http://127.0.0.1:8080/rest/simplinize";
 
+    /**
+     *
+     * @return
+     */
+
     private static org.glassfish.grizzly.http.server.HttpServer startServer() {
 
-        final ResourceConfig rc = new ResourceConfig().packages("service", "filter");
+        final ResourceConfig rc = new ResourceConfig().packages("service", "filter").register(MultiPartFeature.class);
 
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
-    public static void main(String[] args) throws IOException {
+    /**
+     *
+     * @param args
+     */
+
+    public static void main(String[] args) {
 
         Logger l = Logger.getLogger("org.glassfish.grizzly.http.server.HttpHandler");
         l.setLevel(Level.FINE);
@@ -33,7 +44,11 @@ public class Main {
         server.getServerConfiguration().addHttpHandler(new StaticHttpHandler("public"), "/");
 
         System.out.println(ConsoleColor.green() + "Simplinize-Server startet!" + ConsoleColor.reset());
-        System.in.read();
+        try {
+            System.in.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         server.shutdown();
     }
 }

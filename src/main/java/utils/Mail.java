@@ -47,6 +47,7 @@ public class Mail {
 
         try {
             message.setFrom(new InternetAddress(pl.prop.getProperty("mail.user")));
+
             message.setRecipients(
                     Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
             message.setSubject("Set your simplinize password");
@@ -71,8 +72,13 @@ public class Mail {
         } catch (MessagingException e) {
             e.printStackTrace();
         }
-
     }
+
+    /**
+     * 
+     * @param token
+     * @param person
+     */
 
     public void sendConfirmation(Token token, ContactPerson person) {
 

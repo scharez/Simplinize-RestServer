@@ -8,6 +8,10 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name="SkiTeacher.uniqueEmail",
                 query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.email = :email"),
+        @NamedQuery(name="SkiTeacher.uniqueUsername",
+                query="SELECT COUNT(s) FROM SkiTeacher s WHERE s.username = :username"),
+        @NamedQuery(name="SkiTeacher.getAllTeachers",
+                query="SELECT s FROM SkiTeacher s "),
         @NamedQuery(name="SkiTeacher.getUser",
                 query="SELECT s FROM SkiTeacher s WHERE s.username = :username"),
         @NamedQuery(name="SkiTeacher.getUserByEmail",
@@ -26,6 +30,8 @@ public class SkiTeacher extends Person {
     @Temporal(TemporalType.DATE)
     private Date joined;
 
+    // TODO: 17.01.20 Telefonnummer beim draufdrücken automatisch Whatsapp öffnen!  
+
     @ElementCollection
     @Enumerated(EnumType.STRING)
     private List<Role> roles;
@@ -37,7 +43,9 @@ public class SkiTeacher extends Person {
         this.joined = new Date();
     }
 
-    public SkiTeacher() {}
+    public SkiTeacher() {
+        this.joined = new Date();
+    }
 
     public String getUsername() {
         return username;
